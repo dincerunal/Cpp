@@ -1,0 +1,583 @@
+inheritance (kalýtým)
+is-a relationship
+	public / private / protected inheritance
+class scope & name lookup in inheritance
+access control in inheritance
+protected access
+upcasting - downcasting
+object slicing
+special member functions in inheritance
+in-class using definition
+inherited constructor (C++11)
+virtual functions
+pure virtual functions
+function overriding
+override & final contextual keywords  (C++11)
+runtime polimorphism
+static type - dynamic type
+virtual destructor
+virtual constructor idiom (clone)
+multiple inheritance
+virtual inheritance
+diamond formation
+RTTI
+
+single inheritance
+
+-------------------------------------------
+Modern C++
+
+C++  98/03
+C++11
+C++14
+C++17
+C++20
+------------------
+eski C++
+
+
+
+//myclass.h
+
+class Myclass {
+	int mx;  
+public:
+	static int sx;  
+};
+
+//myclass.cpp
+
+int Myclass::sx = 0;  //definition
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	cout << "Myclass::sx = " << Myclass::sx << endl;
+	++Myclass::sx;
+	cout << "Myclass::sx = " << Myclass::sx << endl;
+
+	return 0;
+}
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+
+//myclass.h
+
+Sýnýflarýn static veri öðeleri "incomplete" türlerden olabilir.
+
+class Data; //forward decl
+
+class Myclass {
+	int mx;  
+	static Data data;
+public:
+	
+};
+////
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+//myclass.h
+
+class Myclass {
+	int mx;  
+public:
+	//Myclass m; //gecersiz. Bir sýnýfýn kendi türünden non-static veri öðesi olamaz
+	static Myclass ms; //sýnýflarýn kendi türlrinden static veri öðeleri olabilir
+
+	
+};
+////
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+//myclass.h
+
+class Myclass {
+	int mx;  
+	//static öðe bir dizi ise boyutunu bildirimde belirtmek zorunlu degil
+	static int a[];
+public:
+};
+////
+
+//myclass.cpp
+//int Myclass::a[10];
+int Myclass::a[] = { 2, 3, 5, 7, 11, 13 };
+
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+
+
+//myclass.h
+#include <iostream>
+
+class Myclass {
+public:
+	static const size_t size;
+};
+////
+
+//myclass.cpp
+const size_t Myclass::size = 100;
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+Dikkat!
+Eðer bir sýnýfýn static veri öðesi
+a) const ise
+ve
+b) tamsayý türlerinden ise (integral type) bu veri öðelerine class içinde ilk deðer verilebilir
+
+
+
+//myclass.h
+#include <iostream>
+
+class Myclass {
+public:
+	//gecerli
+	static const size_t size = 100; 
+	//static size_t nec = 100;  //sentaks hatasi - static ama const degil
+	//static const double dval = 4.5;  //sentaks hatasi - static, const ancak tammsayi türlerinden degil
+
+};
+////
+
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+Dikkat!!!
+Modern C++'ta ilk deðer verme sentaksý radikal bir þekilde deðiþti.
+Bu gördüðümüz kurallar eski C++'a iliþkin
+
+
+
+//myclass.h
+#include <iostream>
+
+class Myclass {
+public:
+	static int ms;
+};
+////
+
+//Dikkat! sýnýfýn static bir veri öðesini bildirir (declaration) ancak tanýmlamazsanýz
+//derleme zamanýnda bir hata durumu oluþmaz. Hata link (baðlantý) aþamasýnda baðlayýcý
+//program tarafýndan verilir.
+
+int main()
+{
+	Myclass::ms = 10;
+
+	return 0;
+}
+
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+Dikkat!
+Hem C'de hem de C++ dilinde farklý kaynak dosyalardaki statik ömürlü varlýklarýn hayata
+gelme sýrasý bir kurala tabi deðildir. Yani herhangi bir kaynak dosyada tanýmlanan
+statik ömürlü bir varlýk, baþka bir kaynak dosyadaki statik ömürlü bir varlýktan daha önce ya da
+daha sonra hayata gelebilir.
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+SINIFLARIN static ÜYE ÝÞLEVLERÝ
+static member functions
+
+sýnýflarýn static üye iþlevleri
+bir insatnce (object) için çaðrýlmayan, sýnýfýn kendisi için genel iþlemler yapan
+this göstericisine sahip olmayan 
+iþlevler...
+Sýnýfýn static üye iþlevleri inline olarak sýnýfýn içinde ya da 
+inline olmadan sýnýfa iliþkin cpp dosyasýnda tanýmlanabilir:
+
+
+
+
+
+#include <iostream>
+
+class Myclass {
+
+public:
+	static void func(int x);  //static member function
+	void foo(int x); //non-static member function
+};
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+class Myclass {
+
+public:
+	static int func(int x)
+	{
+		//code
+		return x * x + 5;
+	}
+};
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+
+public:
+	inline static int func(int x)
+	{
+		//code
+		return x * x + 5;
+	}
+};
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+//myclass.h
+class Myclass {
+
+public:
+	static int func(int x);
+};
+//--------------------------------------------------
+//--------------------------------------------------
+
+//myclass.cpp
+
+static anahtar sözcüðünün iþlevin cpp dosyasýndaki tanýmýnda kullanýlmasý sentaks hatasý
+
+//static int Myclass::func(int x)
+//{
+//	//code
+//	return x * x + 5;
+//}
+
+int Myclass::func(int x)
+{
+	//code
+	return x * x + 5;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+
+
+//myclass.cpp
+
+//static anahtar sözcüðünün iþlevin cpp dosyasýndaki tanýmýnda kullanýlmasý sentaks hatasý
+
+//static int Myclass::func(int x)
+//{
+//	//code
+//	return x * x + 5;
+//}
+
+int Myclass::func(int x)
+{
+	//code
+	return x * x + 5;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+static üye iþlevler içinde this göstericisini kullanamayýz. Bu iþlevler this göstericisine sahip deðil
+#include <iostream>
+
+//myclass.h
+class Myclass {
+
+public:
+	static int func(int x)
+	{
+		this; //gecersiz
+	}
+};
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+//myclass.h
+class Myclass {
+	int mx;
+public:
+	//Dikkat
+	//static bir üye iþlev içinde sýnýfýn non static veri öðelerini isimleriyle kullanamayýz
+	static int func(int x)
+	{
+		//mx = x;
+		//this->mx = 10;
+	}
+};
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+//myclass.h
+class Myclass {
+	int mx;
+public:
+	void foo(int y)
+	{
+
+	}
+
+
+	int func(int x)
+	{
+		foo(x);
+	}
+
+};
+
+
+int main()
+{
+	Myclass m;
+
+	m.func(10);
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+//myclass.h
+class Myclass {
+	int mx;
+public:
+	void foo(int y)
+	{
+
+	}
+
+
+	static int func(int x)
+	{
+		foo(x);  //gecersiz.
+		//foo iþlevi bir instance için çaðrýlabilir
+		//func iþlevinin this pointer'i yok
+	}
+
+};
+
+//sýnýflarýn static üye iþlevleri sýnýflarýn non static üye iþlevlerini isimleriyle çaðýramaz
+
+int main()
+{
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+//myclass.h
+class Myclass {
+	static int mx;
+public:
+	static void foo(int y)
+	{
+		mx = 10;
+	}
+
+
+	static int func(int x)
+	{
+		int a = mx;
+		foo(x);  //gecerli
+	}
+
+};
+
+//sýnýflarýn static üye iþlevleri 
+// sýnýflarýn diðer static üye iþlevlerini isimleriyle çaðýrabilir
+//sýnýflarýn static veri öðelerini isimleriyle kullanabilir:
+
+
+int main()
+{
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+sýnýflarýn static üye iþlevleri için const belirteci (specifier) kullanýlamaz.
+zira const belirteci aslýnda gizli parametre deðiþkeni olan sýnýf türünden pointer'ýn gösterdiði yerin const oldugunu anlatýr.
+
+class Myclass {
+public:
+	static void func()const; //gecersiz!!!!
+};
+
+
+#include <iostream>
+
+
+class Myclass {
+
+public:
+	static int mx;  //static data member
+	static void func();  //static member function 
+	void funcx();  //static member function 
+};
+
+//--------------------------------------------------
+//--------------------------------------------------
+//client code
+
+int main()
+{
+	Myclass m;
+	Myclass *ptr = &m;
+	Myclass &r = m;
+
+	m.mx = 10;
+	ptr->mx = 20;
+	m.func();
+	ptr->func();
+	r.func();
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+Bir sýnýf türünden otomatik ömürlü ve statik ömürlü nesne
+oluþturmayý yasaklamak, yalnýzca dinamik ömürlü nesne oluþumuna izin vermek
+
+
+
+class Myclass {
+	Myclass();  //private constructor cannot be called by clients
+public:
+	static Myclass *createObject()
+	{
+		return new Myclass;
+	}
+
+};
+
+
+///client.cpp
+
+//Myclass gm; //gecersiz
+
+int main()
+{
+	//Myclass m;
+	Myclass *p = Myclass::createObject();
+	////....
+
+	delete p;
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+class Singleton {
+	Singleton();
+	static Singleton *mp;
+public:
+	static Singleton &getInstance()
+	{
+		if (!mp)
+			mp = new Singleton;
+
+		return *mp;
+
+	}
+	int get()const;
+	void set(int x);
+	void print()const;
+};
+///
+
+Singleton * Singleton::mp = 0;
+
+
+int main()
+{
+	Singleton::getInstance().print();
+	Singleton &rs = Singleton::getInstance();
+
+	int ival = rs.get();
+	rs.set(10);
+	rs.print();
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+special member functions in old C++
+
+class Data {
+public:
+	Data();  //default ctor
+	~Data(); //destructor
+	Data(const Data &r);  //copy ctor
+	Data &operator=(const Data &r); //assignment op. function
+};
+
+special member functions may be generated by compiler 
+
+----------------------------------
+class Data {
+	T1 t1;
+	T2 t2;
+	T3 t3;
+	///
+public:
+	Data &operator=(const Data &r)
+	{
+		t1 = r.t1;
+		t2 = r.t2;
+		t3 = r.t3;
+		//...
+		return *this;
+	}
+};

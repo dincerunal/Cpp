@@ -1,0 +1,1618 @@
+#include <iostream>
+
+class Base {
+	//interface
+protected:
+
+public:
+	void func();
+	void foo();
+
+};
+
+class Der : public Base {
+public:
+	void derf();
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+public:
+	void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(double);
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func(12); //Der::func(double);
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+public:
+	void func(double);
+};
+
+class Der : public Base {
+	void func(int);
+public:
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func(1.2); //error --->  access control
+}
+//--------------------------------------------------
+//--------------------------------------------------
+class Base {
+public:
+	void func(double);
+};
+
+class Der : public Base {
+	void func(int);
+public:
+};
+
+int main()
+{
+	Der myder;
+
+	myder.Base::func(1.2);
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Myclass {
+public:
+	void func(double);
+};
+
+
+int main()
+{
+	Myclass m;
+
+	m.func(12.5);
+	m.Myclass::func(12.4);
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+	//int x;
+public:
+	void func(double);
+};
+
+int x = 10;
+
+class Der : public Base {
+	//int x;
+public:
+	void foo()
+	{
+		//int x = 10;
+		int a = x;
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+public:
+	int x;
+
+	void func(double);
+};
+
+int x = 10;
+
+class Der : public Base {
+	int x;
+public:
+	void foo()
+	{
+		int x = 10;
+		int a = x; //x in block
+		int b = Der::x; //x in Der class
+		int c = Base::x; //x in Base class
+		int d = ::x; //global x
+
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+	int x;
+
+public:
+
+	void func(double);
+};
+
+int x = 10;
+
+class Der : public Base {
+	int x;
+public:
+	void foo()
+	{
+		int x = 10;
+		int a = x; //x in block
+		int b = Der::x; //x in Der class
+		int c = Base::x; //x in Base class - gecersiz access control
+		int d = ::x; //global x
+
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+	int x;
+public:
+	void func(int);
+};
+
+
+class Der : public Base {
+	int x;
+public:
+	void func(double);
+	void foo()
+	{
+		func(12);  //Der::func
+		Base::func(12.5);  //Base::func
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+	int x;
+public:
+	void foo(int);
+};
+
+
+class Der : public Base {
+	int x;
+public:
+	void foo()
+	{
+		//foo(12);  //gecersiz -----> arguman sayýsý parametre deg. sayisi uyumsuzlugu
+		foo();  //gecerli recursive call
+		Base::foo(12); //Base::foo(int)
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Base {
+	int x, y;
+};
+
+class Der : public Base {
+	int z;
+};
+
+int main()
+{
+	std::cout << "sizeof (Base) = " << sizeof(Base) << std::endl;
+	std::cout << "sizeof (Der) = " << sizeof(Der) << std::endl;
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+};
+
+
+class Der : public Base {
+public:
+
+};
+
+int main()
+{
+	Der myder;
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+};
+
+
+class Der : public Base {
+public:
+	Der() 
+	{
+		std::cout << "Der::Der()" << std::endl;
+	}
+
+};
+
+int main()
+{
+	Der myder;
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Base {
+public:
+	Base(int)
+	{
+		std::cout << "Base::Base(int)" << std::endl;
+	}
+};
+
+
+class Der : public Base {
+public:
+};
+
+int main()
+{
+	//Der myder;  //attempting to reference a deleted function
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+		
+copy constructor
+kopyalayan kurucu iþlev
+
+Myclass m1;
+
+Myclass m2 = m1;
+Myclass m3(m1);
+
+------------------------------------
+void func(Myclass x);
+
+
+{
+	Myclass m;
+	func(m);
+
+------------------------------------
+Myclass func()
+{
+	Myclass m;
+	//code
+
+	return m;
+}
+
+Bir sýnýf için copy constructor yazmaz isek derleyici sýnýfýmýz için
+-non static
+- public
+- inline
+
+bir copy ctor yazar ve derleyicinin yazdýðý copy ctor aþaðýdaki parametrik yapýdadýr:
+
+class Myclass {
+	T1 t1;
+	T2 t2;
+	T3 t3;
+public:
+	//compiler generated copy ctor
+	Myclass(const Myclass &r) : t1(r.r1), t2(r.t2), t3(r.t3)
+	{
+	
+	}
+
+};
+
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+int main()
+{
+	Myclass m1(12, 78);
+	m1.print();
+	Myclass m2 = m1;  //m2 icin derleyici tarafindan yazilan copy ctor cagrilacak
+	m2.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+	//Myclass(const Myclass &r) : mx(r.mx), my(r.my) {} //compiler generated copy ctor
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+int main()
+{
+	Myclass m1(12, 78);
+	m1.print();
+	Myclass m2 = m1;  //m2 icin derleyici tarafindan yazilan copy ctor cagrilacak
+	m2.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+
+	Myclass(const Myclass &r) : mx(r.mx), my(r.my)
+	{
+		std::cout << "Myclass::Myclass(const Myclass &r)" << std::endl;
+	}
+
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+int main()
+{
+	Myclass m1(12, 78);
+	m1.print();
+	Myclass m2 = m1;  //m2 icin derleyici tarafindan yazilan copy ctor cagrilacak
+	m2.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+
+	Myclass(const Myclass &r) : mx(r.mx), my(r.my)
+	{
+		std::cout << "Myclass::Myclass(const Myclass &r)" << std::endl;
+	}
+
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+void func(Myclass m)
+{
+	std::cout << "func()" << std::endl;
+}
+
+int main()
+{
+	Myclass m1(12, 78);
+
+	func(m1);
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+
+	Myclass(const Myclass &r) : mx(r.mx), my(r.my)
+	{
+		std::cout << "Myclass::Myclass(const Myclass &r)" << std::endl;
+	}
+
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+Myclass gm;
+
+Myclass func()
+{
+	//code
+	return gm;
+}
+
+int main()
+{
+	func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+this pointer ve (this anahtar sözcüðü)
+
+class Myclass {
+	
+	x;  //x Myclass definition içinde bildirilen bir isim olsun
+
+};
+
+
+-------------------------------------
+data member
+	static data member
+	non-static data member
+
+member function
+	static member function
+	non-static member function
+
+member type
+
+
+class Myclass {
+	int mx; //non static data member
+	static int ms; //static data member
+public:
+	void func(); //non-static member function
+	static void foo(int); //static member function
+
+	class A {     //type member ---> member type ---> nested type
+		//
+	};
+
+};
+
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		std::cout << "this = " << this << std::endl;
+	}
+};
+
+
+int main()
+{
+	Myclass m;
+
+	std::cout << "&m   =  " << &m << std::endl;
+
+	m.func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		std::cout << "this = " << this << std::endl;
+		//this = bu iþlev hangi nesne için çaðrýlmýþsa o nesnenin adresi
+
+		//*this = bu iþlev hangi nesne için çaðrýlmýþsa o nesnenin kendisi
+	}
+};
+
+
+int main()
+{
+	Myclass m;
+
+	std::cout << "&m   =  " << &m << std::endl;
+
+	m.func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		mx = 10;
+		this->mx = 10;
+		Myclass::mx = 10;
+		///yukaridaki 3 atama da ayný anlamda
+	}
+};
+
+
+int main()
+{
+	Myclass m;
+
+	std::cout << "&m   =  " << &m << std::endl;
+
+	m.func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		//bu iþlev hangi nesne için çaðrýlmýþ ise o nesnenin adresini global bir iþleve göndermek
+		//bu iþlev hangi nesne için çaðrýlmýþ ise o nesnenin kendisini global bir iþleve göndermek
+	}
+
+	Myclass &foo()
+	{
+		//bu iþlev hangi nesne için çaðrýlmýþ ise o nesnenin kendisini döndürmek
+	}
+
+	Myclass *f()
+	{
+		//bu iþlev hangi nesne için çaðrýlmýþ ise o nesnenin adresini döndürmek
+	}
+
+
+};
+
+
+int main()
+{
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func();
+};
+
+//myclass.cpp
+
+void gf1(Myclass *ptr);
+void gf2(Myclass &r);
+
+void Myclass::func()
+{
+	gf1(this);
+	gf2(*this);
+}
+
+//client.cpp
+int main()
+{
+	Myclass m;
+	m.func();
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	Myclass *func()
+	{
+		///code
+		return this;
+	}
+
+	Myclass &foo()
+	{
+		//code
+		return *this;
+	}
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+void A::func()
+{
+
+}
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	Myclass func()
+	{
+		Myclass m;
+
+		//this = &m; sentaks hatasi
+		//this kendisi const olan bir pointer
+		//üye iþlv içinde this göstericisinin deðerini  deðiþtiremeyiz.
+	}
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func(/* const Myclass *const this */) const
+	{
+		
+	}
+
+	void foo(/* Myclass *const this */) 
+	{
+
+	}
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	Myclass *foo()
+	{
+		//
+		return this;
+	}
+
+	//Myclass *func()const
+	//{
+	//	//
+	//	//return this;  gecersiz
+	//}
+
+	const Myclass *f()const
+	{
+		//
+		return this;  
+	}
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void foo(int x);
+	void func()
+	{
+		mx = 10;
+		this->mx = 10;
+
+		foo(20);
+		this->foo(20);
+	}
+
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void foo(int x);
+	void func()
+	{
+		int mx = 23;
+
+		mx = 50;  //yerel mx
+		this->mx = 30; //Myclass::mx;
+		Myclass::mx = 40; //Myclass::mx;
+	}
+
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		mx = 10;
+		this->mx = 10;
+		Myclass::mx = 45;
+
+	}
+
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+//myclass.h
+
+class Myclass {
+	int mx;  //mx is a non-static data member of class Myclass
+	static int sx;  //sx is a static data member of class Myclass
+	//declaration only
+};
+
+//myclass.cpp
+
+int Myclass::sx = 0;  //definition
+
+//--------------------------------------------------
+//--------------------------------------------------
+Tek Nesne Örüntüsü
+
+singleton implemantasyonu
+singleton bir OOP tasarým kalýbýdýr. Çok sýk kullanýlýr.
+Bir sýnýf türünden yalnýzca tek bir nesne olacak.
+ÝKinci bir sýnýf nesnesinin oluþturulmasýna izin verilemeyeck.
+Tek nesneye global bir eriþim saðlanacak
+
+
+
+class Singleton {
+	Singleton();
+	static Singleton *mp;
+public:
+	static Singleton &getInstance()
+	{
+		if (!mp)
+			mp = new Singleton;
+
+		return *mp;
+
+	}
+	int get()const;
+	void set(int x);
+	void print()const;
+};
+///
+
+Singleton * Singleton::mp = 0;
+
+
+int main()
+{
+	Singleton::getInstance().print();
+	Singleton &rs = Singleton::getInstance();
+
+	int ival = rs.get();
+	rs.set(10);
+	rs.print();
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+///name.h
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cstring>
+#include <iostream>
+
+class Name {
+	int mlen;
+	char *mp;
+public:
+	Name(const char *p) : mlen(strlen(p)), mp(new char[mlen + 1])
+	{
+		strcpy(mp, p);
+	}
+	~Name()
+	{
+		delete[]mp;
+	}
+	void print()const
+	{
+		std::cout << "(" << mp << ")" << std::endl;
+	}
+	int getLength()const
+	{
+		return mlen;
+	}
+	void set(int idx, int c)
+	{
+		mp[idx] = c;
+	}
+};
+
+
+
+
+
+//client.cpp
+int main()
+{
+	Name name1 = "mustafa aksoy";
+	name1.print();
+	int len = name1.getLength();
+	name1.set(8, 'O');
+	name1.print();
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+///name.h
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cstring>
+#include <iostream>
+
+class Name {
+	int mlen;
+	char *mp;
+public:
+	Name(const char *p) : mlen(strlen(p)), mp(new char[mlen + 1])
+	{
+		strcpy(mp, p);
+	}
+	Name(const Name &r) : mlen(r.mlen), mp(new char[mlen + 1])
+	{
+		strcpy(mp, r.mp);
+	}
+	Name &operator=(const Name &r)
+	{
+		mlen = r.mlen;
+		delete[]mp;
+		mp = new char[mlen + 1];
+		strcpy(mp, r.mp);
+		return *this;
+	}
+
+	~Name()
+	{
+		delete[]mp;
+	}
+	void print()const
+	{
+		std::cout << "(" << mp << ")" << std::endl;
+	}
+	int getLength()const
+	{
+		return mlen;
+	}
+	void set(int idx, int c)
+	{
+		mp[idx] = c;
+	}
+};
+
+
+void gfunc(Name p)
+{
+	std::cout << "gfunc cagrildi \n";
+	p.print();
+}
+
+
+//client.cpp
+int main()
+{
+	Name name1 = "mustafa aksoy";
+	name1.print();
+
+	if (true) {
+		Name name2 = "gizem ersoz";
+		name2.print();
+		name2 = name1;
+		name2.print();
+	}
+	getchar();
+	name1.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+///name.h
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cstring>
+#include <iostream>
+
+class Name {
+	int mlen;
+	char *mp;
+	Name &deepCopy(const Name &r)
+	{
+		mlen = r.mlen;
+		mp = new char[mlen + 1];
+		strcpy(mp, r.mp);
+		return *this;
+	}
+	void releaseResources()
+	{
+		delete[]mp;
+	}
+
+public:
+	Name(const char *p) : mlen(strlen(p)), mp(new char[mlen + 1])
+	{
+		strcpy(mp, p);
+	}
+	Name(const Name &r)
+	{
+		deepCopy(r);
+	}
+	Name &operator=(const Name &r)
+	{
+		if (this == &r)  //demek ki nesne kendine ataniyor
+			return *this;
+
+		releaseResources();
+		return deepCopy(r);
+	}
+
+
+	~Name()
+	{
+		releaseResources();
+	}
+
+	void print()const
+	{
+		std::cout << "(" << mp << ")" << std::endl;
+	}
+	int getLength()const
+	{
+		return mlen;
+	}
+	void set(int idx, int c)
+	{
+		mp[idx] = c;
+	}
+};
+
+
+void gfunc(Name p)
+{
+	std::cout << "gfunc cagrildi \n";
+	p.print();
+}
+
+
+//client.cpp
+int main()
+{
+	Name name1 = "mustafa aksoy";
+	
+	name1 = name1;
+
+	name1.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+
+class Myclass {
+	//
+public:
+	//
+};
+
+
+int main()
+{
+	Myclass m1, m2, m3, m4;
+
+	m1 = m2;
+	m1.operator=(m2);
+
+	m1 = m2 = m3 = m4;
+
+	m1.operator=(m2.operator=(m3.operator=(m4)));
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+Dikkat! Bir sýnýf için kopyalayan kurucu iþlevinin kodunu siz yazýyorsanýz
+hayata gelecek nesnenin tüm öðelerinin hayata getirilmesinden siz sorumlusunuz.
+Bir ya da birden fazla öðeye ilk deðer vermezseniz
+primitive ogeler cop degerle (garbage value - indetermined value) hayata gelir
+sýnýf türlerinden öðeler default ctor ile hayata getirilir.
+
+
+Dikkat! Bir sýnýf için atama iþlevinin kodunu siz yazýyorsanýz
+kendisine atama yapýlacak nesnenin tüm öðelerinin diðer nesnenin öðelerinden deðerini almasýndan siz sorumlusunuz.
+Bir ya da birden fazla öðeye atama yapmazsanýz
+bu öðeler atanmamýþ þekilde eski deðerlerini korurlar.
+
+
+
+class Car {
+public:
+	/////
+};
+
+class Mercedes : public Car{
+	//////
+};
+
+
+int main()
+{
+	Mercedes m;
+	Car *ptr = &m; //upcasting
+	Car &r = m;  //upcasting
+	Car mycar = m;  //gecerli ama hemen her zaman yanlýþ (nesne dilimlenmesi) (object slicing)
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+
+	Base(const Base &r)
+	{
+		std::cout << "Base::Base(const Base &r)" << std::endl;
+	}
+
+};
+
+
+class Der : public Base {
+
+
+};
+
+
+int main()
+{
+	Der d1;
+	Der d2(d1);
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+
+	Base(const Base &r)
+	{
+		std::cout << "Base::Base(const Base &r)" << std::endl;
+	}
+
+};
+
+
+class Der : public Base {
+
+public:
+	Der() {
+
+	}
+	Der(const Der &r)  //muhtemelen yanlis
+	{
+		
+	}
+};
+
+
+int main()
+{
+	Der d1;
+	Der d2(d1);
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+
+	Base(const Base &r)
+	{
+		std::cout << "Base::Base(const Base &r)" << std::endl;
+	}
+
+};
+
+
+class Der : public Base {
+
+public:
+	Der() {
+
+	}
+	Der(const Der &r) : Base(r)
+	{
+		
+	}
+};
+
+
+int main()
+{
+	Der d1;
+	Der d2(d1);
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base &operator=(const Base &r)
+	{
+		std::cout << "Base operator =()" << std::endl;
+		return *this;
+	}
+};
+
+
+class Der : public Base {
+
+public:
+};
+
+
+int main()
+{
+	Der d1, d2;
+
+	d1 = d2;
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base &operator=(const Base &r)
+	{
+		std::cout << "Base operator =()" << std::endl;
+		return *this;
+	}
+};
+
+
+class Der : public Base {
+
+public:
+	Der &operator=(const Der &r)
+	{
+		std::cout << "Der operator =()" << std::endl;
+		return *this;
+	}
+};
+
+
+int main()
+{
+	Der d1, d2;
+
+	d1 = d2;
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base &operator=(const Base &r)
+	{
+		std::cout << "Base operator =()" << std::endl;
+		return *this;
+	}
+};
+
+
+class Der : public Base {
+
+public:
+	Der &operator=(const Der &r)
+	{
+		std::cout << "Der operator =()" << std::endl;
+		Base::operator=(r);
+		return *this;
+	}
+};
+
+
+int main()
+{
+	Der d1, d2;
+
+	d1 = d2;
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+to override  a function
+polymorphic
+
+
+class Airplane {
+public:
+	void takeoff();
+	virtual void land();
+	virtual void fly() = 0;
+};
+
+abstract class (nesne oluþturamayýz)
+concrete class  (nesne oluþturabiliriz)
+
+
+class Airplane {
+public:
+	void takeoff();
+	virtual void land();
+	virtual void fly() = 0;
+};
+
+int main()
+{
+	Airplane ap;  //gecersiz, sanal sýnýflar türünden nesneler oluþturulamaz
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Airplane {
+public:
+	void takeoff();
+	virtual void land();
+	virtual void fly() = 0;
+};
+
+class Boeing : public Airplane {
+
+};
+
+int main()
+{
+	Boeing b;  //gecersiz, sanal sýnýflar türünden nesneler oluþturulamaz
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+Kalýtýmda
+Taban sýnýfýn sanal ya da saf sanal iþleviyle 
+ayný isimli 
+ayný imzaya sahip
+ayný geri dönüþ deðeri türüne sahip bir iþlev bildirirsek bu iþlevi "override" etmiþ oluyoruz.
+
+Kalýtýmda
+Taban sýnýfýn sanal ya da saf sanal iþleviyle 
+ayný isimli 
+ayný imzaya sahip
+farklý geri dönüþ deðeri türüne sahip bir iþlev bildirirsek bu sentaks hatasý
+
+
+Kalýtýmda
+Taban sýnýfýn sanal ya da saf sanal iþleviyle 
+ayný isimli 
+farklý imzaya sahip
+bir iþlev bildirirsek bu gecerli ancak bu durum function overriding deðil (overloading de deðil)
+
+
+
+
+
+class Base {
+public:
+	virtual void func(int, int);
+};
+
+
+class Der : public Base {
+public:
+	void func(int, int);  //override
+};
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+
+class Base {
+public:
+	virtual void func(int, int);
+};
+
+
+class Der : public Base {
+public:
+	int func(int, int);  //gecersiz
+};
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+
+class Base {
+public:
+	virtual void func(int, int);
+};
+
+
+class Der : public Base {
+public:
+	int func(int);  //gecerli
+};
+
+//--------------------------------------------------
+//--------------------------------------------------
+

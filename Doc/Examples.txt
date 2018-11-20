@@ -1,0 +1,8186 @@
+/*-------------------------------------------------------------------------------------------------------
+	C++'ta // ile satýr sonuna kadar yorumlama yapýlabilir (C99'da da var)
+-------------------------------------------------------------------------------------------------------*/
+
+#include <stdio.h>
+
+int main()
+{
+	// This is a test
+
+	return 0;
+}
+
+/*---------------------------------------------------------------------------------------------------------
+	C++'ta yerel deðiþkenler bloklarýn herhangi bir yerinde bildirilebilir
+---------------------------------------------------------------------------------------------------------*/
+
+#include <stdio.h>
+
+int main()
+{
+	printf("This is a test\n");
+
+	int i = 10;			// C'de geçersiz C++'ta geçerli
+	printf("%d\n", i);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta for döngüsünün birinci kýsmýnda, while, if switch deyimlerinin içerisinde bildirim yapýlabilir
+---------------------------------------------------------------------------------------------------------*/
+
+#include <stdio.h>
+
+int main()
+{
+	for (int i = 0; i < 10; ++i)
+		printf("%d\n", i);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta diðer deyimlerin parantezleri içerisinde de bidiirmler yapýlabilir. Bu durumda bildirilen deðiþkene
+	ilkdeðer verilmek zorundadýr. Test iþlemlerine bu deðiþken içeirisndki deðerler sokulur.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int foo()
+{
+	static int i = 10;
+
+	--i;
+
+	return i;
+}
+
+int main()
+{
+	for (int i = 0; i < 10; ++i)
+		printf("%d\n", i);
+
+	while (int x = foo()) 
+		printf("%d\n", x);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	for döngülerinin birinci kýsmýnda bildiirlen deðiþkenler for döngüsünün içerisinde kullanýlabilirler
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	for (int i = 0; i < 10; ++i) {
+			// i'yi kullanýrsak bu for döngüsünün i'si anlaþýlýr
+		for (int i = 0; i < 10; ++i) {
+			// i'yi kullanýrsak bu for döngüsünün i'si anlaþýlýr
+		}
+	}
+	// Burada artýýk hiçbir i'yi kullanamayýz
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Ayuný bloktaki for döngülerinin birinci kýsmýnda ayný isimli deðiþkenlerin bildirilmesi soruna yol açmaz
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	for (int i = 0; i < 10; ++i)
+		printf("%d\n", i);
+
+	for (int i = 0; i < 10; ++i)		// geçerli!
+		printf("%d\n", i);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Referanslar ayný türden bir nesneyle ilkdeðer verilerek tanýmlanýrlar. Bu duurmda derleyici referansa
+	ilkdeðer olarak verilen nesnenin adresini yerleþtirir.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	int a;
+	int &r = a;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir referans kullanýldýðýnda her zaman içerisindeki adresteki nesne kullanýlmýþ olur.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	int a = 10;
+	int &r = a;
+
+	printf("%d\n", a);		// 10
+	r = 20;
+	printf("%d\n", a);		// 20
+	printf("%d\n", r);		// 20
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Referanslar
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	int a = 10;
+	int &r = a;
+	int &k = r;
+
+	printf("%d\n", r);		// 10
+	printf("%d\n", k);		// 10
+
+	return 0;	
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir fonksiyonun parametre deðiþkeni bir refeans olabilir. Bu durumda biz fonksiyonu ayný türden bir
+	nesneyle çaðýrmak zorundayýz. Böylece nesnenin adresi fonksiyonun parametre deðiþkeni olan referansa 
+	atanmýþ olacaktýr.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void foo(int &r)		
+{
+	printf("%d\n", r);
+}
+
+int main()
+{
+	int a = 10;
+
+	foo(a);
+	
+	return 0;	
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Fonksiyon parametresi olarak referanslar
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void foo(int &r)		
+{
+	r = 20;
+}
+
+int main()
+{
+	int a = 10;
+
+	foo(a);
+	printf("%d\n", a);		// 20
+	
+	return 0;	
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Referanslarla swap fonksiyonunun yazýmý
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void swap(int &a, int &b)
+{
+	int temp = a;
+	a = b;
+	b = temp;
+}
+
+int main()
+{
+	int x = 10, y = 20;
+
+	swap(x, y);
+	printf("x = %d, y = %d\n", x, y);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Yapýlar da referanslar yoluyla fonksiyonlara parametre olarak geçirilebilirler. Bir yapý referansýyla
+	yapýnýn elemanlarýna eriþmek için nokta operatörü kullanýlmaktadýr..
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+struct DATE {
+	int day, month, year;
+};
+
+void disp_date(struct DATE &date)
+{
+	printf("%d/%d/%d\n", date.day, date.month, date.year);
+}
+
+int main()
+{
+	struct DATE date = { 12, 11, 2010 };
+
+	disp_date(date);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	const referanslar
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	int a = 10;
+	const int &r = a;		// const int *r = &a;
+
+	printf("%d\n", r);		// geçerli
+	r = 20;					// error!
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	const bir referans farklý türden bir nesneyle ilkdeðer verilerek tanýmlanamabilir. Bu durumda derleyici
+	referans ile ayný türden geçici bir nesne yaratýr. Ýlkdeðer olarak verilen nesnein içindeki deðeri 
+	bu geçici nesneye atar ve geçici nesnenin adresini referansa yerleþtirir. 
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	long a = 10;
+	const int &r = a;
+
+	printf("%d\n", r);		/* 10 */
+	a = 20;
+	printf("%d\n", r);		/* 10 */
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	const bir referans sabitle ilkdeðer verilerek de tanýmlanabilir. Bu durumda sabit deðer ayný türdne bir
+	geçici nesnenin içerisine yerleþtirilir ve geçici nesnenin adresi referansa atanýr.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	const int &r = 10;		// geçerli
+	printf("%d\n", r);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	R-Value referanslar sbaitlerle ya da baþka türden nesnelerle ilkdeðer verilerek tanýmlanabilirler. Bu durumda
+	yine geçici nesnenin adresi referansa yerleþtirilir. Ancak referans const olmak zorunda dðeildir.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	int &&r = 10;			// geçerli
+	
+	printf("%d\n", r);		// 10
+	r = 20;					// geçerli
+	printf("%d\n", r);		// 20
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir fonksiyonun geri dönüþ deðeri bir referans olabilir. Bu durumda fonksiyon adeta return ifadesindeki
+	nesneyi temsil ediyor durumdadýr.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int g_a = 10;
+
+int &foo()
+{
+	return g_a;
+}
+
+int main()
+{
+	foo() = 20;
+	printf("%d\n", g_a);
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	new operatörünün kullanýmý
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	int *pi;
+
+	pi = new int;		// 1 int'lik dinamik tahsisat
+
+	*pi = 20;
+	printf("%d\n", *pi);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	new operatörü
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	int *pi;
+
+	pi = new int[10];		// 10 int'lik dinamik tahsisat
+
+	for (int i = 0; i < 10; ++i)
+		pi[i] = i * i;
+
+	for (int i = 0; i < 10; ++i)
+		printf("%d\n", pi[i]);
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Eðer dinamik alan new operatörütünün köþeli parantezsiz versiyonuyla tahsis edilmiþse delete operatörünün
+	köþeli parantezsiz versiyonuyla boþaltýlýr. Eðer dinamik alan new operatörünün köþeli parantezli versiyonuyla
+	tahsis edilmiþse boþaltýmý da köþeli parantezli delete operatörüyle yapýlmalýdýr.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	int *p1;
+	int *p2;
+
+	p1 = new int;
+	p2 = new int[10];
+
+	//....
+
+	delete p1;
+	delete[] p2;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	new ve delete operatörlerinin kullanýmý
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char *getname()
+{
+	char s[100];
+	char *name;
+
+	printf("Adi Soyadi:");
+	gets_s(s, 100);
+
+	name = new char[strlen(s) + 1];
+	strcpy(name, s);
+
+	return name;
+}
+
+int main()
+{
+	char *name;
+
+	name = getname();
+	puts(name);
+
+	delete[] name;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta parametrik yapýlarý farklý olan ayný isimli fonksiyonlar tanýmlanabilir. Buna "function overloading"	
+	denilmektedir.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void foo()
+{
+	printf("foo, void\n");
+}
+
+void foo(int a)		
+{
+	printf("foo, int\n");
+}
+
+void foo(long a)
+{
+	printf("foo, long\n");
+}
+
+void foo(double a)
+{
+	printf("foo, double\n");
+}
+
+int main()
+{
+	foo(10);
+	foo(12.4);
+	foo();
+	foo(1L);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Overload resolution
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void print(int a, long b)		// #1
+{
+	printf("int, long\n");
+}
+
+void print(int a, double b)		// #2
+{
+	printf("int, double\n");
+}
+
+void print(double a, int b)		// #3
+{
+	printf("double, int\n");
+}
+
+void print(int a, int b)		// #4
+{
+	printf("int, int\n");
+}
+
+void print(int a, const char *str)	// #5
+{
+	printf("int, const char *\n");
+}
+
+void print()		// #6
+{
+	printf("void\n");
+}
+
+int main()
+{
+	print(100L, 1.2);		// int , double
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	overload resolution
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void print(int a, long b)		// #1
+{
+	printf("int, long\n");
+}
+
+void print(long a, int b)		// #2
+{
+	printf("int, double\n");
+}
+
+int main()
+{
+	print(100, 120);	// ambiguity error!
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta parametre deðiþkenleri default deðer alabilir
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void foo(int a, int b = 10, int c = 20)
+{
+	printf("a = %d, b = %d, c = %d\n", a, b, c);
+}
+
+int main()
+{
+	foo(100);			// foo(100, 10, 20);
+	foo(100, 200);		// foo(100, 200, 20);
+	foo(100, 200, 300);	// foo(100, 200, 20);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Default argümanm alan parametre deðiþkenleri
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void putmsg(const char *msg = "ok")
+{
+	puts(msg);
+}
+
+int main()
+{
+	putmsg("error");
+	putmsg();		// putmsg("ok");
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Default argüman alan fonlsiyonlar overload edildiðinde overload resolution sýrasýnda ikianlamlýlýk (ambiguity)
+	hatalarý ortaya çýkabilir
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+void foo(int a, int b = 10)		// imza: foo, int, ,nt
+{
+	printf("a = %d, b = %d\n", a, b);
+}
+
+void foo(int a)					// imza foo, int
+{
+	printf("a = %d\n");
+}
+
+int main()
+{
+	foo(10, 20);		// geçerli!
+	foo(100);			// error!
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta bool türü vardýr. Ayrýca C++'ta true ve false isminde bool türden iki sabit de vardýr. 
+	true 1 olarak, false ise 0 olarak aritmetik iþlemlere sokulur.	
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	bool b = true;
+	int result;
+
+	result = true + 100;
+	printf("%d\n", result);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta skaler türlerden bool türüne otomatik dönüþtürme vardýr. Sýfýr dýþý deðerler true olarak, 
+	0 deðeri, NULL adres false olarak dönüþtürülür.
+---------------------------------------------------------------------------------------------------------*
+
+#include <stdio.h>
+
+int main()
+{
+	bool b = -3.7;		// b = true
+	
+	printf("%d\n", b);
+	b = 0;				// b = false
+	
+	printf("%d\n", b);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	stdout dosyasýna yazdýrma yapmak için iostream kütüphanesindeki cout kullanýmý	
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int a = 10, b = 20;
+
+	cout << "a = " << a << ", " << b << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta enum türleri ayrý bir tür kabul edilmektedir ve temel türlerden enum türlerine otomatik dönüþtürme 
+	yoktur. enum türünün sabitleri ilgili enum türündendir. enum türünden deðiþkenlere ilgili enum'un 
+	enum sabitleri atanabilir.
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+enum Color {
+	Red, Green, Blue
+};
+
+int main(void)
+{
+	Color c = Green;
+	cout << c << endl;
+
+	c = 10;		// C'de geçerli, C++'ta geçersiz!
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Ancak enum türlerindne diðer temel türlere otomatik dönüþtürme vardýr. enum'un sayýsal deðeri iþleme
+	sokulur.
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+enum Color {
+	Red, Green, Blue
+};
+
+int main(void)
+{
+	Color c = Green;
+	int result;
+
+	result = c;
+	cout << result << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Ancak temel türlerdeki deðrler tür dönüþtürme operatörü ile enum türüne dönüþtürülebilir
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+enum Color {
+	Red, Green, Blue
+};
+
+int main(void)
+{
+	Color c;
+
+	c = (Color)2;
+	cout << c << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++11'de faaliyet alaný kýsýtlanmýþ yeni bir enum türü daha dile eklenmiþtir. Buna "scoped enumeration"
+	denilmektedir. 
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+enum class Color {
+	Red, Green, Blue
+};
+
+enum class Test {Red};
+
+int main(void)
+{
+	Color c;
+	Test t;
+
+	t = Test::Red;
+	c = Color::Red;
+
+	cout << (int)c << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	inline fonksiyonlar
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+inline int square(int a)
+{
+	return a * a;
+}
+
+int main(void)
+{
+	cout << square(10) << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	inline fonksiyonlar static yapýlmamýþsa external linkage özelliði gösterirler
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+static inline int square(int a)
+{
+	return a * a;
+}
+
+int main(void)
+{
+	int result;
+
+	result = square(10);		// result = 10 * 10
+
+	cout << result << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýf bildirimi ve yapý bildirimi ileride görülecek basit bir fark dýþýnda aynýdýr. Ancak
+	daha çok sýnýflar kullanýlýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+	//...
+};
+
+struct Mample {
+	//...
+};
+
+int main(void)
+{
+	
+
+	return 0;
+}
+/*--------------------------------------------------------------------------------------------------------
+	Bir sýnýfýn 3 tane bölümü vardýr. Bu bölümler eriþim belirleyici anahtar sözcük ve : ile belirtilir.	
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	//public
+private:
+	//private
+protected:
+	//protected
+};
+
+
+int main(void)
+{
+	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bölümlerden hepsi olmak zorunda deðildir.
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	//public
+private:
+	//private
+};
+
+
+int main(void)
+{
+	
+
+	return 0;
+}
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýflarda istenildiði kadar bölüm belirtilebilir. Derleyici açýsýndan ayný bölümler tek bir bölüm
+	olarak ele alýnýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	//public
+private:
+	//private
+public:
+	//...
+private:
+	//...
+};
+
+
+int main(void)
+{
+	
+
+	return 0;
+}
+/*--------------------------------------------------------------------------------------------------------
+	Bölüm belirtilmezse sýnýflarda default private yapýlarda ise default public bölüm kabul edilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+	//private
+};
+
+struct Mample {
+	//public
+};
+
+
+int main(void)
+{
+	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn veri elemanlarýna (member variable) nokta operatörü ile eriþilebilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x; // Sýnýfýn veri elemaný
+	double y; // 
+};
+
+int main(void)
+{
+	Sample s; //Nesne tanýmlama
+
+	s.x = 10;
+	s.y = 3.5;
+
+	Sample s2;
+
+	s2.x = 34;
+	s2.y = 4.6;
+
+	cout << "s.x:" << s.x << "\n";
+	cout << "s.y:" << s.y << "\n";
+
+	cout << "s2.x:" << s2.x << "\n";
+	cout << "s2.y:" << s2.y << "\n";
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn üye fonksiyonlarýnýn sýnýf dýþýnda tanýmlama genel sentaksý:
+	<geri dönüþ deðeri> <sýnýf ismi>::<fonksiyon ismi>([parametreler])
+	{
+		//...
+	}
+	Sýnýfýn üye fonksiyonlar sýnýf nesnesi ve nokta operatörü ile çaðrýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	void Foo();
+	void Bar()
+	{
+		cout << "Bar\n";
+	}
+};
+
+void Sample::Foo()
+{
+	cout << "Foo\n";
+}
+
+
+int main(void)
+{
+	Sample s;
+
+	s.Foo();
+	s.Bar();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Fonksiyon türünden bir gösterici olabilir. Bu durumda elemanlara operatörü ile eriþilebilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	void Foo();
+	void Bar()
+	{
+		cout << "Bar\n";
+	}
+};
+
+void Sample::Foo()
+{
+	cout << "Foo\n";
+}
+
+
+int main(void)
+{
+	Sample s;
+	Sample *p;
+
+	p = &s;
+
+	(*p).Foo();
+	(*p).Bar();
+
+	p->Foo();
+	p->Bar();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýflarýn const üye fonksiyonlarý olabilmektedir. Bu durumda const anahtar sözcüðü
+	hem prototip bildirimnde hem de fonksiyon tanýmlamasýnda olmalýdýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	void Foo() const;
+	void Bar()
+	{
+		cout << "Bar\n";
+	}
+};
+
+void Sample::Foo() const
+{
+	cout << "Foo\n";
+}
+
+int main(void)
+{
+	Sample s;
+
+	s.Foo();
+	s.Bar();
+
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Ayný isimde ve parametrik yapýya sahip hem const hem de const olmayan fonksiyon yazýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	void Foo() const;
+	void Foo()
+	{
+		cout << "Foo\n";
+	}
+};
+
+void Sample::Foo() const
+{
+	cout << "const Foo\n";
+}
+
+int main(void)
+{
+	Sample s;
+
+	s.Foo();
+
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	const bir sýnýf nesnesi ile sýnýfýn veri elemanlarýna atama yapýlamaz
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x;
+	double y;	
+};
+
+
+int main(void)
+{
+	Sample s1;
+	const Sample s = s1;
+
+	s1.x = 10;
+	s.x = 10; //error
+
+	
+
+	
+	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn veri elemanlarý mutable olarak bildirilebilir. Bu veri elemanlarýna const 
+	nesneler ile de atama yapýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x;
+	mutable double y;
+};
+
+
+int main(void)
+{
+	Sample s1;
+	const Sample s = s1;
+
+	s1.x = 10;
+	s.y = 3.4;
+	//s.x = 10; //error	
+	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	const referanslar ile de sýnýfýn veri elemanlarýna atama yapýlamaz
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x;
+	mutable double y;
+};
+
+
+int main(void)
+{
+	Sample s;
+
+	const Sample &r = s;
+
+	r.x = 10; //error
+	r.y = 4.5;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	const göstericiler ile de sýnýfýn veri elemanlarýna atama yapýlamaz
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x;
+	mutable double y;
+};
+
+
+int main(void)
+{
+	Sample s;
+
+	const Sample *p = &s;
+
+	p->x = 10; //error
+	p->y = 4.5;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýflar genel olarak veri elemanlarýndan ve bu elamanlarý kullanan üye fonksiyonlardan oluþur.
+	Sýnýfýn üye fonskiyonlarý içerisinde veri elemanlarý doðrudan kullanýlabilir. Bu durumda veri elemaný
+	o fonksiyonun çaðrýldýðý nesnenin elemaný olur
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x;
+	void SetX(int a);
+	void Disp()
+	{
+		cout << x << "\n";
+	}
+};
+
+void Sample::SetX(int a)
+{
+	x = a;
+}
+
+int main(void)
+{
+	Sample s;
+
+	s.SetX(20);	
+
+	Sample s1;
+
+	s1.SetX(34);
+
+	s.Disp();
+	s1.Disp();
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn const üye fonksiyonlarý içerisinde sýnýfýn veri elemanlarý deðiþtirilemez
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x;
+	void Foo(int a) const
+	{
+		x = a; //error
+	}
+};
+
+int main(void)
+{
+	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	const bir sýnýf nesnesi ile (referans veye gösterici de olabilir) sýnýfýn const olmayan 
+	üye fonksiyonlarý çaðrýlamaz. Çünkü const olmayan üye fonksiyon içerisinde sýnýfýn
+	veri elemaný deðiþtiriliyor olabilir. Bu durum da const olma anlamýyla çeliþir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x;
+	void Foo(int a)
+	{
+		
+	}
+
+
+};
+
+int main(void)
+{
+	const Sample s;
+
+	s.Foo(10);//error
+	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir sýnýfýn üye fonksiyonu sýnýfýn veri elamanlarýnda deðiþiklik yapmýyorsa const olarak bildirilmelidir.
+	(const bildirilmese de geçerlidir). Bu durumda const olmayan bir fonksiyon için kesinlikle veri elemanlarýný
+	deðiþtiriyordur (ya da deðiþtiren baþka bir fonksiyonu çaðýrýyordur) denir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class IntNumber {
+public:
+	int val;
+	void SetVal(int a)
+	{
+		val = a;
+	}
+
+	void Disp() const
+	{
+		cout << val << "\n";
+	}
+
+};
+
+int main(void)
+{
+	IntNumber n;
+
+	n.SetVal(20);
+	n.Disp();	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir fonksiyonun parametresi const bir gösterici olabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class IntNumber {
+public:
+	int val;
+	void SetVal(int a)
+	{
+		val = a;
+	}
+
+	void Add(short a)
+	{
+		Add((int)a);
+	}
+
+	void Add(int a)
+	{
+		val += a;
+	}
+
+	void Disp() const
+	{
+		cout << val << "\n";
+	}
+
+};
+
+void Foo(const IntNumber *p)
+{
+	p->Disp();
+}
+
+int main(void)
+{
+	IntNumber n;
+
+	n.SetVal(20);
+	n.Add(10);
+	Foo(&n);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Referans dönen fonkaiyonlar ile hem veri elemanýný deðiþtirebilen hem de deðerine eriþilebildiði
+	fonksiyonlar yazýlabilir. Bu fonksiyonlarýn const bir nesne, referans veya gösterici ile de
+	çaðrýlabilmesi için aþaðýdaki gibi overload edilmelidir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class IntNumber {
+public:
+	int val;
+	int &value() 
+	{
+		cout << "int &value()\n";
+		return val;
+	}	
+	const int &value() const 
+	{
+		cout << "const int &value() const\n";
+		return val; 
+	}
+};
+
+void Foo(const IntNumber &r)
+{
+	cout << r.value() << "\n";
+}
+
+int main()
+{
+	IntNumber n;
+
+	n.value() = 45;
+
+	cout << n.value() << "\n";
+
+	Foo(n);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Referans dönen fonksiyonlar
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+int g_x;
+
+int &foo()
+{
+	return g_x;
+}
+
+int main()
+{
+	int a;
+	int &r = a;
+
+	r = 10;
+
+	cout << "a=" << a << "\n";
+
+	foo() = 34;
+
+	cout << "g_x=" << g_x << "\n";
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir sýnýfýn baþlangýç fonskiyonlarý olabilir. Baþlangýç fonskiyonlarý sýnýf ismi ile ayný olan
+	ve geri dönüþ deðeri kavramý olmayan fonskiyonlardýr (void yazýlamaz). Baþlangýç fonskiyonlarý
+	overload edilebilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample() //default constructor
+	{
+		cout << "Sample::Sample()\n";
+	}
+
+	Sample(int val)
+	{
+		cout << "Sample::Sample(int)\n";
+	}
+
+	Sample(double val)
+	{
+		cout << "Sample::Sample(double)\n";
+	}
+};
+
+int main()
+{
+	Sample s; 
+	Sample s1(10);
+	Sample s2(2.3);	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Standartlara göre bir sýnýf için hiç bir constructor yazýlmamýþsa derleyici default constructor ý
+	içi boþ olarak yazar. Ancak programcý tarafýndan yazýlan bir constructor varsa derleyici bu
+	default constructor ý yazmaz
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample(int val)
+	{
+		cout << "Sample::Sample(int)\n";
+	}
+
+	Sample(double val)
+	{
+		cout << "Sample::Sample(double)\n";
+	}
+};
+
+int main()
+{
+	Sample s; //error
+	Sample s1(10);
+	Sample s2(2.3);	
+
+	return 0;
+}
+/*--------------------------------------------------------------------------------------------------------
+	Constructor içerisinde sýnýfýn veri elemanlarýna deðer atanabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Date {
+public:
+	int day, mon, year;
+
+	Date(int d, int m, int y)
+	{
+		//...
+		day = d;
+		mon = m;
+		year = y;
+	}
+
+	void Disp() const
+	{
+		cout << day << "/" << mon << "/" << year << "\n";
+	}
+};
+
+int main()
+{
+	Date d(10, 9, 1976);
+
+	d.Disp();
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Constructor içerisinde nesnenin yaratýlmasý sýrasýnda birtakým ilk iþlemler yapýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+
+using namespace std;
+
+class File {
+public:
+	FILE *f;
+
+	File(const char *fname, const char *mode)
+	{
+		if ((f = fopen(fname, mode)) == NULL) {
+			cerr << "Can not open file:" << fname;
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	void Type() const
+	{
+		int ch;
+
+		while ((ch = fgetc(f)) != EOF)
+			putchar(ch);
+	}
+	//...
+};
+
+int main()
+{	
+	File file("test.txt", "r");
+
+	file.Type();
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn public bölümü her yerden eriþilebilrdir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	int x;
+	void Foo()
+	{
+		//...
+	}
+};
+
+int main()
+{	
+	Sample s;
+
+	s.Foo();
+	s.x;	
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn private bölümü yalnýzca sýnýf içerisinden eriþilebillir bölümdür
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+private:
+	int x;
+	void Foo()
+	{
+		x = 10;
+		//...
+	}
+
+	void Bar();
+};
+
+void Sample::Bar()
+{
+	x = 34;
+	Foo();
+}
+
+int main()
+{	
+	Sample s;
+
+	s.Foo(); //error
+	s.x;	//error
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn protected bölümü türetme (inheritance) sözkonusu deðilse private anlamýndadýr.
+	Inheritance konusu ileride ele alýnacaktýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+protected:
+	int x;
+	void Foo()
+	{
+		x = 10;
+		//...
+	}
+
+	void Bar();
+};
+
+void Sample::Bar()
+{
+	x = 34;
+	Foo();
+}
+
+int main()
+{	
+	Sample s;
+
+	s.Foo(); //error
+	s.x;	//error
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýflarýn bölümleri
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Date {
+public:
+	Date(int day, int mon, int year);
+public:
+	void SetDay(int day);
+	void SetMonth(int mon);
+	void SetYear(int year);
+	int GetDay() const { return m_day; }
+	int GetMonth() const { return m_mon; }
+	int GetYear() const { return m_year; }
+private:
+	int m_day, m_mon, m_year;
+};
+
+
+Date::Date(int day, int mon, int year)
+{
+	//...
+	m_day = day;
+	m_mon = mon;
+	m_year = year;
+}
+
+void Date::SetDay(int day)
+{
+	//...
+	m_day = day;
+}
+void Date::SetMonth(int mon)
+{
+	//...
+	m_mon = mon;
+}
+void Date::SetYear(int year)
+{
+	//...
+	m_year = year;
+}
+
+int main()
+{	
+	Date d(10, 9, 1976);
+
+	cout << d.GetDay() << "/" << d.GetMonth() << "/" << d.GetYear() << endl;
+
+	d.SetDay(11);
+	d.SetMonth(7);
+	d.SetYear(1983);
+
+	cout << d.GetDay() << "/" << d.GetMonth() << "/" << d.GetYear() << endl;
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Encapsulation durumu ile karþýlabilecek durumlar:
+	1. Sýnýflarýn veri elemanlarýnýn sýnýflar geliþtirildikçe isimlerinin ve hatta türlerinin
+	deðiþtirilmesi çok sýk rastlan bir durumdur. Bçyle bir durumda eski kodlarýn da bundan etkilenmemesi
+	için veriler gizlenebilir
+	2. Bir veri elemanýnýn sýnýr deðerleri olabilir. Örneðin bir veri elemanýnýn negatif olmamasý
+	gerekiyorsa dýþarýdan yapýlacak olan geçersiz atamalarýn engellenebilmesi ve kontrollü
+	bir biçimde yapýlabilmesi veriler gizlenebilir
+	3. Bir veri elemaný deðiþtiðinde baþka bir veri elemanýn da deðiþtirilmesi gerekebilir. Bu durumun
+	yapýlmasý için veriler gizlenebilir
+	4. Bir veri elemaný deðiþtiðinde sýnýfýn bir iþlem yapýyor olmasý gerekebilir. Bu durumda da
+	veriler gizlenebilir
+---------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------
+	M.I.L (Member initialization list), ctor sentaksý
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample(int x) : m_x(x)
+	{}
+	int GetX() const { return m_x; }
+private: 
+	int m_x;
+};
+
+
+#if 1
+int main()
+{	
+	Sample s(10);
+
+	cout << s.GetX() << endl;
+	
+	
+	return 0;
+}
+#endif
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Date sýnýfý iskeleti
+---------------------------------------------------------------------------------------------------------*/
+
+#ifndef DATE_H_
+#define DATE_H_
+
+class Date {
+public:
+	Date(int day, int mon, int year);
+public:
+	void SetDay(int day);
+	void SetMonth(int mon);
+	void SetYear(int year);
+	int GetDay() const { return m_day; }
+	int GetMonth() const { return m_mon; }
+	int GetYear() const { return m_year; }
+	int GetDayOfYear() const { return m_dayOfYear; }
+private:
+	int m_day, m_mon, m_year;
+	int m_dayOfYear;
+};
+
+
+#endif //DATE_H_
+#include "Date.h"
+
+Date::Date(int day, int mon, int year)
+{
+	//...
+	m_day = day;
+	m_mon = mon;
+	m_year = year;
+}
+
+void Date::SetDay(int day)
+{
+	//...
+	m_day = day;
+}
+void Date::SetMonth(int mon)
+{
+	//...
+	m_mon = mon;
+}
+void Date::SetYear(int year)
+{
+	//...
+	m_year = year;
+}
+
+#if 0
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	Date d(10, 9, 1976);
+
+	cout << d.GetDay() << "/" << d.GetMonth() << "/" << d.GetYear() << endl;
+
+	d.SetDay(11);
+	d.SetMonth(7);
+	d.SetYear(1983);
+
+	cout << d.GetDay() << "/" << d.GetMonth() << "/" << d.GetYear() << endl;
+
+
+	return 0;
+}
+
+#endif
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	File sýnýfýnýn iskeleti
+---------------------------------------------------------------------------------------------------------*
+
+#ifndef FILE_H_
+#define FILE_H_
+
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+
+class File {
+public:
+	File(const char *fname, const char *mode);	
+	void Type() const;	
+	//...
+private:
+	FILE *m_f;
+};
+
+#endif // FILE_H_
+#include "File.h"
+
+File::File(const char *fname, const char *mode)
+{
+	if ((m_f = fopen(fname, mode)) == NULL) {
+		std::cerr << "Can not open file:" << fname;
+		exit(EXIT_FAILURE);
+	}
+}
+
+void File::Type() const
+{
+	int ch;
+
+	while ((ch = fgetc(m_f)) != EOF)
+		putchar(ch);
+}
+
+
+#if 0
+
+#include <iostream>
+
+int main()
+{
+	File f("test.txt", "rt");
+
+	f.Type();
+
+	return 0 ;
+
+}
+#endif
+
+/*--------------------------------------------------------------------------------------------------------
+	Basit bir Circle sýnýfý
+---------------------------------------------------------------------------------------------------------*
+#ifndef CIRCLE_H_
+#define CIRCLE_H_
+
+class Circle {
+public:
+	Circle(double r = 0.0);
+	void SetRadius(double r);
+	double GetRadius() const { return m_r; }
+	double GetArea() const { return m_area; }
+	double GetCircumference() const { return m_circumference; }
+private:
+	void calculate();
+private:
+	double m_r;
+	double m_area, m_circumference;
+};
+
+
+#endif
+
+#include "Circle.h"
+
+#include <cmath>
+
+using namespace std;
+
+static const double PI = 3.14;
+
+void Circle::calculate()
+{
+	m_area = PI * m_r * m_r;
+	m_circumference = 2 * PI * m_r;
+}
+
+Circle::Circle(double r) : m_r(fabs(r))
+{
+	calculate();
+}
+
+void Circle::SetRadius(double r)
+{
+	m_r = fabs(r);
+	calculate();
+}
+
+#if 0
+
+#include <iostream>
+
+void Display(const Circle &r)
+{
+	cout << "Radius:" << r.GetRadius() << endl;
+	cout << "Circumference:" << r.GetCircumference() << endl;
+	cout << "Area:" << r.GetArea() << endl;	
+}
+
+int main()
+{
+	Circle c(-3.4);
+
+	Display(c);
+
+	c.SetRadius(4.6);
+
+	Display(c);
+
+	return 0;
+}
+
+#endif
+
+
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	
+---------------------------------------------------------------------------------------------------------*
+#ifndef CIRCLE_H_
+#define CIRCLE_H_
+
+class Circle {
+public:
+	Circle(double r = 0.0);
+	void SetRadius(double r);
+	double GetRadius() const { return m_r; }
+	double GetArea() const;
+	double GetCircumference() const;
+private:
+	void calculate();
+private:
+	double m_r;	
+};
+
+
+#endif
+
+#include "Circle.h"
+
+#include <cmath>
+
+using namespace std;
+
+static const double PI = 3.14;
+
+Circle::Circle(double r) : m_r(fabs(r))
+{}
+void Circle::SetRadius(double r)
+{
+	m_r = fabs(r);	
+}
+
+double Circle::GetArea() const
+{
+	return PI * m_r * m_r;
+}
+double Circle::GetCircumference() const
+{
+	return 2 * PI * m_r;
+}
+
+#if 1
+
+#include <iostream>
+
+void Display(const Circle &r)
+{
+	cout << "Radius:" << r.GetRadius() << endl;
+	cout << "Circumference:" << r.GetCircumference() << endl;
+	cout << "Area:" << r.GetArea() << endl;	
+}
+
+int main()
+{
+	Circle c(-3.4);
+
+	Display(c);
+
+	c.SetRadius(4.6);
+
+	Display(c);
+
+	return 0;
+}
+
+#endif
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýflarýn bitiþ fonksiyonu (destructor) nesnenin ömrü bittiðinde otomatik olarak çaðrýlan fonksiyondur
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample(int x) : m_x(x)
+	{
+		cout << "constructor:m_x=" << m_x << "\n";
+	}
+
+	~Sample()
+	{
+		cout << "destructor m_x=" << m_x << "\n";
+	}
+private:
+	int m_x;
+};
+
+#if 1
+int main()
+{	
+	Sample s(10);
+	Sample s1(20);
+	
+	return 0;
+}
+#endif
+/*--------------------------------------------------------------------------------------------------------
+	Destructor içerisinde sýnýf nesnesi yapýlacak kritik iþlemlerin nesne öldüðünde yapýlmasý
+	saðlanabilir. Örneðin bir sýnýf içerisinde dinamik olarak tahsis edilmiþ bir alan
+	delete edilebilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample(size_t n) : m_p(new int[n])
+	{}
+	//...
+	~Sample() { delete[] m_p; }
+private:
+	int *m_p;
+};
+
+#if 1
+int main()
+{	
+	Sample s(10);
+	Sample s1(20);
+	
+	return 0;
+}
+#endif
+
+
+/*--------------------------------------------------------------------------------------------------------
+	
+---------------------------------------------------------------------------------------------------------*
+#ifndef FILE_H_
+#define FILE_H_
+
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+
+class File {
+public:
+	File(const char *fname, const char *mode);	
+	~File() { fclose(m_f); }
+	void Type() const;	
+	//...
+private:
+	FILE *m_f;
+};
+
+#endif // FILE_H_
+#include "File.h"
+
+File::File(const char *fname, const char *mode)
+{
+	if ((m_f = fopen(fname, mode)) == NULL) {
+		std::cerr << "Can not open file:" << fname;
+		exit(EXIT_FAILURE);
+	}
+}
+
+void File::Type() const
+{
+	int ch;
+
+	while ((ch = fgetc(m_f)) != EOF)
+		putchar(ch);
+}
+
+
+#if 0
+
+#include <iostream>
+
+int main()
+{
+	File f("test.txt", "rt");
+
+	f.Type();
+
+	return 0 ;
+
+}
+#endif
+
+/*--------------------------------------------------------------------------------------------------------
+	new operatörü ile dinamik olarak nesne tahsisatý da yapýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:	
+	Sample(size_t n = 10) : m_p(new int[n])
+	{}
+	//...
+	~Sample() { delete[] m_p; }
+private:
+	int *m_p;
+};
+
+#if 1
+int main()
+{	
+	Sample *p;
+
+	p = new Sample; // a = new Sample();
+
+	delete p;
+	
+	return 0;
+}
+#endif
+
+/*--------------------------------------------------------------------------------------------------------
+	new operatörü ile dinamik olarak nesne tahsisatý da yapýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:	
+	Sample(size_t n = 10) : m_p(new int[n])
+	{}
+	//...
+	~Sample() { delete[] m_p; }
+private:
+	int *m_p;
+};
+
+#if 1
+int main()
+{	
+	Sample *p;
+
+	p = new Sample(12);
+
+	delete p;
+	
+	return 0;
+}
+#endif
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýf türünden diziler olabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:	
+	Sample(size_t n = 10) : m_p(new int[n])
+	{}
+	//...
+	~Sample() { delete[] m_p; }
+private:
+	int *m_p;
+};
+
+#if 1
+int main()
+{	
+	Sample *p = new Sample[10];
+	Sample samples[20];
+
+	delete[] p;
+
+	return 0;
+}
+#endif
+/*--------------------------------------------------------------------------------------------------------
+	Composition (has a) iliþkisi
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class B {
+public:
+	B(/*...*/)
+	{
+		cout << "B constructor\n";
+	}
+
+	~B()
+	{
+		cout << "B destructor\n";
+	}
+};
+
+class A {
+public:
+	A(/*...*/)
+	{
+		cout << "A constructor\n";
+	}
+	~A()
+	{
+		cout << "A destructor\n";
+	}
+private:
+	B m_b;
+};
+
+#if 1
+int main()
+{	
+	A a;
+	
+	return 0;
+}
+#endif
+
+/*--------------------------------------------------------------------------------------------------------
+	Kapsanan sýnýfýnýn istenilen bir constructorý ctor sentaksý ile çaðrýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class B {
+public:
+	B()
+	{
+		cout << "B constructor\n";
+	}
+	B(int a)
+	{
+		cout << "B constructor int\n";
+	}
+
+	~B()
+	{
+		cout << "B destructor\n";
+	}
+};
+
+class A {
+public:
+	A(/*...*/) : m_b(10)
+	{
+		cout << "A constructor\n";
+	}
+	~A()
+	{
+		cout << "A destructor\n";
+	}
+private:
+	B m_b;
+};
+
+#if 1
+int main()
+{	
+	A a;
+	
+	return 0;
+}
+#endif
+
+/*--------------------------------------------------------------------------------------------------------
+	Composition iliþkisinin kapsayan bir referans tutularak gerçekleþtirimi
+	Dikkat, bazý ayrýntýlar (copy constructor, move constructor vs.) yazýlmamýþtýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class B {
+public:
+	B()
+	{
+		cout << "B constructor\n";
+	}
+	B(int a)
+	{
+		cout << "B constructor int\n";
+	}
+
+	~B()
+	{
+		cout << "B destructor\n";
+	}
+};
+
+class A {
+public:
+	A(/*...*/) : m_p(new B(10))
+	{
+		cout << "A constructor\n";
+	}
+	~A()
+	{
+		delete m_p;
+		cout << "A destructor\n";
+	}
+private:
+	B *m_p;
+};
+
+#if 1
+int main()
+{	
+	A a;
+	
+	return 0;
+}
+#endif
+
+/*--------------------------------------------------------------------------------------------------------
+	Car ile Engine arasýndaki composition iliþkisi
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+class Engine {
+public:
+	Engine(const char *pt, int tork);
+	//...
+	const char *GetType() const { return m_type; }
+	int GetTork() const { return m_tork; }
+	//...
+public:
+	void Start();
+	void Accelerate();
+	void Slow();
+	void Stop();
+	//...
+private:
+	char m_type[50];
+	int m_tork;
+};
+
+Engine::Engine(const char *type, int tork) : m_tork(tork)
+{
+	strcpy(m_type, type);
+}
+
+void Engine::Start()
+{
+	cout << "Start engine" << endl;
+}
+void Engine::Accelerate()
+{
+	cout << "Accelerate engine" << endl;
+}
+
+void Engine::Slow()
+{
+	cout << "Slow engine" << endl;
+}
+
+void Engine::Stop()
+{
+	cout << "Stop engine" << endl;
+}
+
+class Car {
+public:
+	Car(int count, const char *model, const char *type, int tork) 
+		: m_count(count), m_engine(type, tork)
+	{
+		strcpy(m_model, model);
+	}
+	//...
+public:
+	void Run();
+	void Brake();
+private:
+	int m_count;
+	char m_model[50];
+	Engine m_engine;
+};
+
+void Car::Run()
+{
+	m_engine.Start();
+	m_engine.Accelerate();
+	//...
+	Brake();
+	m_engine.Stop();	
+}
+void Car::Brake()
+{
+	m_engine.Slow();
+}
+
+
+
+#if 1
+int main()
+{	
+	Car c(4, "Ferrari", "Diesel", 350);
+
+	c.Run();
+	
+	return 0;
+}
+#endif
+/*--------------------------------------------------------------------------------------------------------
+	Aggregation (holds a) iliþkisinin genel biçimi
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+
+using namespace std;
+
+class B {
+
+};
+
+class A {
+public:
+	A(B *p/*, ...*/) :
+		m_p(p)/*, ...*/
+	{}
+	void setB(B *p)
+	{
+		m_p = p;
+	}
+	B *GetB() const { return m_p; }
+private:
+	B *m_p;
+};
+#if 1
+int main()
+{	
+	B b;
+	A a(&b);
+	B b1;
+	a.setB(&b1);
+
+	return 0;
+}
+#endif
+
+/*--------------------------------------------------------------------------------------------------------
+	Connection ile Command arasýndaki basit bir aggregation iliþkisi
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+class Connection {
+public:
+	Connection(const char *url, const char *username, const char *password)
+	{
+		strcpy(m_url, url);
+		strcpy(m_username, username);
+		strcpy(m_password, password);
+	}
+
+	//...
+	const char *GetUrl() const { return m_url; }
+	const char *GetUsername() const { return m_username; }
+	const char *GetPassword() const { return m_password; }
+private:
+	char m_url[250];
+	char m_username[50];
+	char m_password[50];
+};
+
+class Command {
+public:
+	Command(Connection *p, const char *cmd) : m_p(p)
+	{
+		strcpy(m_cmd, cmd);
+	}
+	//...
+public:
+	void Execute()
+	{
+		cout << "Url:" << m_p->GetUrl() << "\n";
+		cout << "Username:" << m_p->GetUsername() << "\n";
+		cout << "Password:" << m_p->GetPassword() << "\n";
+		cout << "Command:" << m_cmd << "\n";
+	}
+private:
+	Connection *m_p;
+	char m_cmd[500];
+};
+
+#if 1
+int main()
+{	
+	Connection con("mysql://189.78.98:3306/peopledb", "oguz", "1234");
+	const char *cmdStr = "select * from people";
+	Command cmd(&con, cmdStr);
+
+	cmd.Execute();
+
+	return 0;
+}
+#endif
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Ýsim alanlarý global bölgedeki isim çakýþmasýný bir nebze olsun engellemek için düþünülmüþtür		
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+namespace A
+{
+	class Sample {
+		//...
+	};
+
+	int x;
+
+	void foo()
+	{
+		cout << "A::foo" << endl;
+	}
+}
+
+namespace B
+{
+	class Sample {
+		//...
+	};
+
+	int x;
+
+	void foo()
+	{
+		cout << "B::foo" << endl;
+	}
+}
+
+int main()
+{
+	A::Sample s;
+	B::Sample k;
+
+	A::x = 10;
+	B::x = 20;
+
+	cout << A::x << ", " << B::x << endl;
+
+	A::foo();
+	B::foo();
+
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Ýç içe isim alanlarý söz konusu olabilir. 
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+namespace A
+{
+	int a;
+	namespace B
+	{
+		int b;
+	}
+}
+
+int main()
+{
+	A::a = 10;
+	A::B::b = 20;
+
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir fonksiyonun prototip bildirimi bir isim alanýnda yapýlabilir. Tanýmlamasý ise onu kapsayan bir 
+	isim alanýnda yapýlabilir
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+namespace A
+{
+	void foo();
+}
+
+void A::foo()
+{
+	cout << "A::foo" << endl;
+}
+
+int main()
+{
+	A::foo();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+		Bir fonksiyonun prototip bildirimi bir isim alanýnda yapýlabilir. Tanýmlamasý ise onu kapsayan bir 
+	isim alanýnda yapýlabilir
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+namespace A
+{
+	namespace B
+	{
+		void foo();
+	}
+
+	void B::foo()
+	{
+		cout << "A::foo" << endl;
+	}
+}
+
+int main()
+{
+	A::B::foo();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ýn bütün sýnýflarý ve fonksiyonlarý ve nesneleri (tüm isimleri) std isim alanýn içerisindedir
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+int main()
+{
+	std::cout << "merhaba" << std::endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Ayný isim alaný birden fazla kez bildirilebilir. Bu durum ekleme anlamýna gelir.
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+namespace A
+{
+	void foo()
+	{
+		cout << "foo\n";
+	}
+}
+
+namespace A 
+{
+	void bar()
+	{
+		cout << "bar\n";
+	}
+}
+	
+int main()
+{
+	A::foo();
+	A::bar();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	using naespace direktifi	
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+namespace A
+{
+	namespace B {
+		void foo()
+		{
+			cout << "A::foo" << endl;
+		}
+	}
+
+	using namespace B;
+
+	void bar()
+	{
+		foo();
+	}
+}
+
+
+int main()
+{
+	A::foo();
+	B::bar();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Eðer isim aranýrken birden fazla using direktifi ile belirtilen isim alanýnda bulunursa error oluþur
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+namespace A
+{
+	void foo()
+	{
+		//...
+	}
+}
+
+namespace B {
+	void foo()
+	{
+		//...
+	}
+}
+
+using namespace A;
+using namespace B;
+
+int main()
+{
+	foo();		// error!
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Aþaðýdaki örnekte A ve B isim alanlarýný kapsayan en dar isim alaný global isim alanýdýr. Dolayýsýyla
+	çaðrýda bir sorun ortaya çýkmaz.
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+namespace A
+{
+	void foo()
+	{
+		//...
+	}
+}
+
+namespace B
+{
+	using namespace A;
+
+	void foo()
+	{
+		//...
+	}
+
+	void bar()
+	{
+		foo();
+	}
+}
+
+int main()
+{
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Geçici nesnelerinn yaratýlmasý
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample()
+	{
+		cout << "constructor" << endl;
+	}
+
+	Sample(int a)
+	{
+		cout << "int constructor" << endl;
+		m_a = a;
+	}
+	
+	~Sample()
+	{
+		cout << "destructor" << endl;
+	}
+
+	void disp() const
+	{
+		cout << m_a << endl;
+	}
+private:
+	int m_a;
+};
+
+void foo(const Sample &s)
+{
+	s.disp();
+}
+
+int main()
+{
+	foo(Sample(10));
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Geçici nesne const bir referansa baðlanýþsa bu durumda onun yok edilmesi referansýn faaliyet alaný 
+	bittiðinde yapýlmaktadýr.
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample()
+	{
+		cout << "constructor" << endl;
+	}
+
+	Sample(int a)
+	{
+		cout << "int constructor" << endl;
+		m_a = a;
+	}
+	
+	~Sample()
+	{
+		cout << "destructor" << endl;
+	}
+
+	void disp() const
+	{
+		cout << m_a << endl;
+	}
+private:
+	int m_a;
+};
+
+void foo(const Sample &s)
+{
+	s.disp();
+}
+
+int main()
+{
+	{
+		const Sample &s = Sample();
+		cout << "one" << endl;
+	}
+	cout << "two" << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta türetme iþlemleri
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	void foo();
+	void bar();
+private:
+	int m_x;
+};
+
+void A::foo()
+{
+	cout << "A::foo" << endl;
+}
+
+void A::bar()
+{
+	cout << "A::bar" << endl;
+}
+
+class B : public A {
+public:
+	void tar();
+};
+
+void B::tar()
+{
+	cout << "B::tar" << endl;
+}
+
+int main()
+{
+	B b;
+
+	b.foo();
+	b.bar();
+	b.tar();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Türemiþ sýnýf nesnesi taban sýnýfýn veri elemanlarýný da tutar
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	void foo();
+	void bar();
+private:
+	int m_x;
+	int m_y;
+};
+
+void A::foo()
+{
+	cout << "A::foo" << endl;
+}
+
+void A::bar()
+{
+	cout << "A::bar" << endl;
+}
+
+class B : public A {
+public:
+	void tar();
+private:
+	int m_z;
+	int m_k;
+};
+
+void B::tar()
+{
+	cout << "B::tar" << endl;
+}
+
+int main()
+{
+	B b;
+
+	cout << sizeof(b) << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Türetme Durumunda baþlangýç ve bitiþ fonksiyonlarýnýn çaðrýlmasý
+---------------------------------------------------------------------------------------------------------*
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	A();
+	A(int a);
+	~A();
+private:
+	int m_a;
+};
+
+class B : public A {
+public:
+	B(int a, int b);
+	~B();
+private:
+	int m_b;
+};
+
+class C : B {
+public:
+	C(int a, int b, int c);
+	~C();
+private: 
+	int m_c;
+};
+
+A::A()
+{
+	cout << "default constructor\n";
+}
+
+A::A(int a) 
+{
+	cout << "A int constructor\n";
+	m_a = a;
+}
+
+A::~A()
+{
+	cout << "A destructor\n";
+}
+
+
+B::B(int a, int b) : A(a)
+{
+	cout << "B int, int constructor\n";
+	m_b = b;
+}
+
+B::~B() 
+{
+	cout << "B destructor\n";
+}
+
+C::C(int a, int b, int c) : B(a, b)
+{
+	cout << "C int, int, int consturctor\n";
+	m_c = c;
+}
+
+C::~C()
+{
+	cout << "C desctructor\n";
+}
+
+int main()
+{
+	C c(1, 2, 3);
+
+	return 0;
+}
+
+#include <iostream>
+
+class Base {
+	//interface
+protected:
+
+public:
+	void func();
+	void foo();
+
+};
+
+class Der : public Base {
+public:
+	void derf();
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+public:
+	void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(double);
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func(12); //Der::func(double);
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+public:
+	void func(double);
+};
+
+class Der : public Base {
+	void func(int);
+public:
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func(1.2); //error --->  access control
+}
+//--------------------------------------------------
+//--------------------------------------------------
+class Base {
+public:
+	void func(double);
+};
+
+class Der : public Base {
+	void func(int);
+public:
+};
+
+int main()
+{
+	Der myder;
+
+	myder.Base::func(1.2);
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Myclass {
+public:
+	void func(double);
+};
+
+
+int main()
+{
+	Myclass m;
+
+	m.func(12.5);
+	m.Myclass::func(12.4);
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+	//int x;
+public:
+	void func(double);
+};
+
+int x = 10;
+
+class Der : public Base {
+	//int x;
+public:
+	void foo()
+	{
+		//int x = 10;
+		int a = x;
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+public:
+	int x;
+
+	void func(double);
+};
+
+int x = 10;
+
+class Der : public Base {
+	int x;
+public:
+	void foo()
+	{
+		int x = 10;
+		int a = x; //x in block
+		int b = Der::x; //x in Der class
+		int c = Base::x; //x in Base class
+		int d = ::x; //global x
+
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+	int x;
+
+public:
+
+	void func(double);
+};
+
+int x = 10;
+
+class Der : public Base {
+	int x;
+public:
+	void foo()
+	{
+		int x = 10;
+		int a = x; //x in block
+		int b = Der::x; //x in Der class
+		int c = Base::x; //x in Base class - gecersiz access control
+		int d = ::x; //global x
+
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+	int x;
+public:
+	void func(int);
+};
+
+
+class Der : public Base {
+	int x;
+public:
+	void func(double);
+	void foo()
+	{
+		func(12);  //Der::func
+		Base::func(12.5);  //Base::func
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Base {
+	int x;
+public:
+	void foo(int);
+};
+
+
+class Der : public Base {
+	int x;
+public:
+	void foo()
+	{
+		//foo(12);  //gecersiz -----> arguman sayýsý parametre deg. sayisi uyumsuzlugu
+		foo();  //gecerli recursive call
+		Base::foo(12); //Base::foo(int)
+	}
+};
+
+int main()
+{
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Base {
+	int x, y;
+};
+
+class Der : public Base {
+	int z;
+};
+
+int main()
+{
+	std::cout << "sizeof (Base) = " << sizeof(Base) << std::endl;
+	std::cout << "sizeof (Der) = " << sizeof(Der) << std::endl;
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+};
+
+
+class Der : public Base {
+public:
+
+};
+
+int main()
+{
+	Der myder;
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+};
+
+
+class Der : public Base {
+public:
+	Der() 
+	{
+		std::cout << "Der::Der()" << std::endl;
+	}
+
+};
+
+int main()
+{
+	Der myder;
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Base {
+public:
+	Base(int)
+	{
+		std::cout << "Base::Base(int)" << std::endl;
+	}
+};
+
+
+class Der : public Base {
+public:
+};
+
+int main()
+{
+	//Der myder;  //attempting to reference a deleted function
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+		
+copy constructor
+kopyalayan kurucu iþlev
+
+Myclass m1;
+
+Myclass m2 = m1;
+Myclass m3(m1);
+
+------------------------------------
+void func(Myclass x);
+
+
+{
+	Myclass m;
+	func(m);
+
+------------------------------------
+Myclass func()
+{
+	Myclass m;
+	//code
+
+	return m;
+}
+
+Bir sýnýf için copy constructor yazmaz isek derleyici sýnýfýmýz için
+-non static
+- public
+- inline
+
+bir copy ctor yazar ve derleyicinin yazdýðý copy ctor aþaðýdaki parametrik yapýdadýr:
+
+class Myclass {
+	T1 t1;
+	T2 t2;
+	T3 t3;
+public:
+	//compiler generated copy ctor
+	Myclass(const Myclass &r) : t1(r.r1), t2(r.t2), t3(r.t3)
+	{
+	
+	}
+
+};
+
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+int main()
+{
+	Myclass m1(12, 78);
+	m1.print();
+	Myclass m2 = m1;  //m2 icin derleyici tarafindan yazilan copy ctor cagrilacak
+	m2.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+	//Myclass(const Myclass &r) : mx(r.mx), my(r.my) {} //compiler generated copy ctor
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+int main()
+{
+	Myclass m1(12, 78);
+	m1.print();
+	Myclass m2 = m1;  //m2 icin derleyici tarafindan yazilan copy ctor cagrilacak
+	m2.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+
+	Myclass(const Myclass &r) : mx(r.mx), my(r.my)
+	{
+		std::cout << "Myclass::Myclass(const Myclass &r)" << std::endl;
+	}
+
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+int main()
+{
+	Myclass m1(12, 78);
+	m1.print();
+	Myclass m2 = m1;  //m2 icin derleyici tarafindan yazilan copy ctor cagrilacak
+	m2.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+
+	Myclass(const Myclass &r) : mx(r.mx), my(r.my)
+	{
+		std::cout << "Myclass::Myclass(const Myclass &r)" << std::endl;
+	}
+
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+void func(Myclass m)
+{
+	std::cout << "func()" << std::endl;
+}
+
+int main()
+{
+	Myclass m1(12, 78);
+
+	func(m1);
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+class Myclass {
+	int mx, my;
+public:
+	Myclass() : mx(0), my(0) {	}
+	Myclass(int x, int y) : mx(x), my(y) {}
+
+	Myclass(const Myclass &r) : mx(r.mx), my(r.my)
+	{
+		std::cout << "Myclass::Myclass(const Myclass &r)" << std::endl;
+	}
+
+	void print()const
+	{
+		std::cout << "mx = " << mx << " my = " << my << "\n";
+	}
+
+};
+
+
+Myclass gm;
+
+Myclass func()
+{
+	//code
+	return gm;
+}
+
+int main()
+{
+	func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+this pointer ve (this anahtar sözcüðü)
+
+class Myclass {
+	
+	x;  //x Myclass definition içinde bildirilen bir isim olsun
+
+};
+
+
+-------------------------------------
+data member
+	static data member
+	non-static data member
+
+member function
+	static member function
+	non-static member function
+
+member type
+
+
+class Myclass {
+	int mx; //non static data member
+	static int ms; //static data member
+public:
+	void func(); //non-static member function
+	static void foo(int); //static member function
+
+	class A {     //type member ---> member type ---> nested type
+		//
+	};
+
+};
+
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		std::cout << "this = " << this << std::endl;
+	}
+};
+
+
+int main()
+{
+	Myclass m;
+
+	std::cout << "&m   =  " << &m << std::endl;
+
+	m.func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		std::cout << "this = " << this << std::endl;
+		//this = bu iþlev hangi nesne için çaðrýlmýþsa o nesnenin adresi
+
+		//*this = bu iþlev hangi nesne için çaðrýlmýþsa o nesnenin kendisi
+	}
+};
+
+
+int main()
+{
+	Myclass m;
+
+	std::cout << "&m   =  " << &m << std::endl;
+
+	m.func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		mx = 10;
+		this->mx = 10;
+		Myclass::mx = 10;
+		///yukaridaki 3 atama da ayný anlamda
+	}
+};
+
+
+int main()
+{
+	Myclass m;
+
+	std::cout << "&m   =  " << &m << std::endl;
+
+	m.func();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		//bu iþlev hangi nesne için çaðrýlmýþ ise o nesnenin adresini global bir iþleve göndermek
+		//bu iþlev hangi nesne için çaðrýlmýþ ise o nesnenin kendisini global bir iþleve göndermek
+	}
+
+	Myclass &foo()
+	{
+		//bu iþlev hangi nesne için çaðrýlmýþ ise o nesnenin kendisini döndürmek
+	}
+
+	Myclass *f()
+	{
+		//bu iþlev hangi nesne için çaðrýlmýþ ise o nesnenin adresini döndürmek
+	}
+
+
+};
+
+
+int main()
+{
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func();
+};
+
+//myclass.cpp
+
+void gf1(Myclass *ptr);
+void gf2(Myclass &r);
+
+void Myclass::func()
+{
+	gf1(this);
+	gf2(*this);
+}
+
+//client.cpp
+int main()
+{
+	Myclass m;
+	m.func();
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	Myclass *func()
+	{
+		///code
+		return this;
+	}
+
+	Myclass &foo()
+	{
+		//code
+		return *this;
+	}
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+void A::func()
+{
+
+}
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	Myclass func()
+	{
+		Myclass m;
+
+		//this = &m; sentaks hatasi
+		//this kendisi const olan bir pointer
+		//üye iþlv içinde this göstericisinin deðerini  deðiþtiremeyiz.
+	}
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func(/* const Myclass *const this */) const
+	{
+		
+	}
+
+	void foo(/* Myclass *const this */) 
+	{
+
+	}
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	Myclass *foo()
+	{
+		//
+		return this;
+	}
+
+	//Myclass *func()const
+	//{
+	//	//
+	//	//return this;  gecersiz
+	//}
+
+	const Myclass *f()const
+	{
+		//
+		return this;  
+	}
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void foo(int x);
+	void func()
+	{
+		mx = 10;
+		this->mx = 10;
+
+		foo(20);
+		this->foo(20);
+	}
+
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void foo(int x);
+	void func()
+	{
+		int mx = 23;
+
+		mx = 50;  //yerel mx
+		this->mx = 30; //Myclass::mx;
+		Myclass::mx = 40; //Myclass::mx;
+	}
+
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+#include <iostream>
+
+using namespace std;
+
+class Myclass {
+	int mx;
+public:
+	void func()
+	{
+		mx = 10;
+		this->mx = 10;
+		Myclass::mx = 45;
+
+	}
+
+};
+
+
+//client.cpp
+int main()
+{
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+//myclass.h
+
+class Myclass {
+	int mx;  //mx is a non-static data member of class Myclass
+	static int sx;  //sx is a static data member of class Myclass
+	//declaration only
+};
+
+//myclass.cpp
+
+int Myclass::sx = 0;  //definition
+
+//--------------------------------------------------
+//--------------------------------------------------
+Tek Nesne Örüntüsü
+
+singleton implemantasyonu
+singleton bir OOP tasarým kalýbýdýr. Çok sýk kullanýlýr.
+Bir sýnýf türünden yalnýzca tek bir nesne olacak.
+ÝKinci bir sýnýf nesnesinin oluþturulmasýna izin verilemeyeck.
+Tek nesneye global bir eriþim saðlanacak
+
+
+
+class Singleton {
+	Singleton();
+	static Singleton *mp;
+public:
+	static Singleton &getInstance()
+	{
+		if (!mp)
+			mp = new Singleton;
+
+		return *mp;
+
+	}
+	int get()const;
+	void set(int x);
+	void print()const;
+};
+///
+
+Singleton * Singleton::mp = 0;
+
+
+int main()
+{
+	Singleton::getInstance().print();
+	Singleton &rs = Singleton::getInstance();
+
+	int ival = rs.get();
+	rs.set(10);
+	rs.print();
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+///name.h
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cstring>
+#include <iostream>
+
+class Name {
+	int mlen;
+	char *mp;
+public:
+	Name(const char *p) : mlen(strlen(p)), mp(new char[mlen + 1])
+	{
+		strcpy(mp, p);
+	}
+	~Name()
+	{
+		delete[]mp;
+	}
+	void print()const
+	{
+		std::cout << "(" << mp << ")" << std::endl;
+	}
+	int getLength()const
+	{
+		return mlen;
+	}
+	void set(int idx, int c)
+	{
+		mp[idx] = c;
+	}
+};
+
+
+
+
+
+//client.cpp
+int main()
+{
+	Name name1 = "mustafa aksoy";
+	name1.print();
+	int len = name1.getLength();
+	name1.set(8, 'O');
+	name1.print();
+
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+///name.h
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cstring>
+#include <iostream>
+
+class Name {
+	int mlen;
+	char *mp;
+public:
+	Name(const char *p) : mlen(strlen(p)), mp(new char[mlen + 1])
+	{
+		strcpy(mp, p);
+	}
+	Name(const Name &r) : mlen(r.mlen), mp(new char[mlen + 1])
+	{
+		strcpy(mp, r.mp);
+	}
+	Name &operator=(const Name &r)
+	{
+		mlen = r.mlen;
+		delete[]mp;
+		mp = new char[mlen + 1];
+		strcpy(mp, r.mp);
+		return *this;
+	}
+
+	~Name()
+	{
+		delete[]mp;
+	}
+	void print()const
+	{
+		std::cout << "(" << mp << ")" << std::endl;
+	}
+	int getLength()const
+	{
+		return mlen;
+	}
+	void set(int idx, int c)
+	{
+		mp[idx] = c;
+	}
+};
+
+
+void gfunc(Name p)
+{
+	std::cout << "gfunc cagrildi \n";
+	p.print();
+}
+
+
+//client.cpp
+int main()
+{
+	Name name1 = "mustafa aksoy";
+	name1.print();
+
+	if (true) {
+		Name name2 = "gizem ersoz";
+		name2.print();
+		name2 = name1;
+		name2.print();
+	}
+	getchar();
+	name1.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+///name.h
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cstring>
+#include <iostream>
+
+class Name {
+	int mlen;
+	char *mp;
+	Name &deepCopy(const Name &r)
+	{
+		mlen = r.mlen;
+		mp = new char[mlen + 1];
+		strcpy(mp, r.mp);
+		return *this;
+	}
+	void releaseResources()
+	{
+		delete[]mp;
+	}
+
+public:
+	Name(const char *p) : mlen(strlen(p)), mp(new char[mlen + 1])
+	{
+		strcpy(mp, p);
+	}
+	Name(const Name &r)
+	{
+		deepCopy(r);
+	}
+	Name &operator=(const Name &r)
+	{
+		if (this == &r)  //demek ki nesne kendine ataniyor
+			return *this;
+
+		releaseResources();
+		return deepCopy(r);
+	}
+
+
+	~Name()
+	{
+		releaseResources();
+	}
+
+	void print()const
+	{
+		std::cout << "(" << mp << ")" << std::endl;
+	}
+	int getLength()const
+	{
+		return mlen;
+	}
+	void set(int idx, int c)
+	{
+		mp[idx] = c;
+	}
+};
+
+
+void gfunc(Name p)
+{
+	std::cout << "gfunc cagrildi \n";
+	p.print();
+}
+
+
+//client.cpp
+int main()
+{
+	Name name1 = "mustafa aksoy";
+	
+	name1 = name1;
+
+	name1.print();
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+
+class Myclass {
+	//
+public:
+	//
+};
+
+
+int main()
+{
+	Myclass m1, m2, m3, m4;
+
+	m1 = m2;
+	m1.operator=(m2);
+
+	m1 = m2 = m3 = m4;
+
+	m1.operator=(m2.operator=(m3.operator=(m4)));
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+Dikkat! Bir sýnýf için kopyalayan kurucu iþlevinin kodunu siz yazýyorsanýz
+hayata gelecek nesnenin tüm öðelerinin hayata getirilmesinden siz sorumlusunuz.
+Bir ya da birden fazla öðeye ilk deðer vermezseniz
+primitive ogeler cop degerle (garbage value - indetermined value) hayata gelir
+sýnýf türlerinden öðeler default ctor ile hayata getirilir.
+
+
+Dikkat! Bir sýnýf için atama iþlevinin kodunu siz yazýyorsanýz
+kendisine atama yapýlacak nesnenin tüm öðelerinin diðer nesnenin öðelerinden deðerini almasýndan siz sorumlusunuz.
+Bir ya da birden fazla öðeye atama yapmazsanýz
+bu öðeler atanmamýþ þekilde eski deðerlerini korurlar.
+
+
+
+class Car {
+public:
+	/////
+};
+
+class Mercedes : public Car{
+	//////
+};
+
+
+int main()
+{
+	Mercedes m;
+	Car *ptr = &m; //upcasting
+	Car &r = m;  //upcasting
+	Car mycar = m;  //gecerli ama hemen her zaman yanlýþ (nesne dilimlenmesi) (object slicing)
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+
+	Base(const Base &r)
+	{
+		std::cout << "Base::Base(const Base &r)" << std::endl;
+	}
+
+};
+
+
+class Der : public Base {
+
+
+};
+
+
+int main()
+{
+	Der d1;
+	Der d2(d1);
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+
+	Base(const Base &r)
+	{
+		std::cout << "Base::Base(const Base &r)" << std::endl;
+	}
+
+};
+
+
+class Der : public Base {
+
+public:
+	Der() {
+
+	}
+	Der(const Der &r)  //muhtemelen yanlis
+	{
+		
+	}
+};
+
+
+int main()
+{
+	Der d1;
+	Der d2(d1);
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base()
+	{
+		std::cout << "Base::Base()" << std::endl;
+	}
+
+	Base(const Base &r)
+	{
+		std::cout << "Base::Base(const Base &r)" << std::endl;
+	}
+
+};
+
+
+class Der : public Base {
+
+public:
+	Der() {
+
+	}
+	Der(const Der &r) : Base(r)
+	{
+		
+	}
+};
+
+
+int main()
+{
+	Der d1;
+	Der d2(d1);
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base &operator=(const Base &r)
+	{
+		std::cout << "Base operator =()" << std::endl;
+		return *this;
+	}
+};
+
+
+class Der : public Base {
+
+public:
+};
+
+
+int main()
+{
+	Der d1, d2;
+
+	d1 = d2;
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base &operator=(const Base &r)
+	{
+		std::cout << "Base operator =()" << std::endl;
+		return *this;
+	}
+};
+
+
+class Der : public Base {
+
+public:
+	Der &operator=(const Der &r)
+	{
+		std::cout << "Der operator =()" << std::endl;
+		return *this;
+	}
+};
+
+
+int main()
+{
+	Der d1, d2;
+
+	d1 = d2;
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+#include <iostream>
+
+using namespace std;
+
+class Base {
+
+public:
+	Base &operator=(const Base &r)
+	{
+		std::cout << "Base operator =()" << std::endl;
+		return *this;
+	}
+};
+
+
+class Der : public Base {
+
+public:
+	Der &operator=(const Der &r)
+	{
+		std::cout << "Der operator =()" << std::endl;
+		Base::operator=(r);
+		return *this;
+	}
+};
+
+
+int main()
+{
+	Der d1, d2;
+
+	d1 = d2;
+
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+to override  a function
+polymorphic
+
+
+class Airplane {
+public:
+	void takeoff();
+	virtual void land();
+	virtual void fly() = 0;
+};
+
+abstract class (nesne oluþturamayýz)
+concrete class  (nesne oluþturabiliriz)
+
+
+class Airplane {
+public:
+	void takeoff();
+	virtual void land();
+	virtual void fly() = 0;
+};
+
+int main()
+{
+	Airplane ap;  //gecersiz, sanal sýnýflar türünden nesneler oluþturulamaz
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+class Airplane {
+public:
+	void takeoff();
+	virtual void land();
+	virtual void fly() = 0;
+};
+
+class Boeing : public Airplane {
+
+};
+
+int main()
+{
+	Boeing b;  //gecersiz, sanal sýnýflar türünden nesneler oluþturulamaz
+
+	return 0;
+}
+//--------------------------------------------------
+//--------------------------------------------------
+
+Kalýtýmda
+Taban sýnýfýn sanal ya da saf sanal iþleviyle 
+ayný isimli 
+ayný imzaya sahip
+ayný geri dönüþ deðeri türüne sahip bir iþlev bildirirsek bu iþlevi "override" etmiþ oluyoruz.
+
+Kalýtýmda
+Taban sýnýfýn sanal ya da saf sanal iþleviyle 
+ayný isimli 
+ayný imzaya sahip
+farklý geri dönüþ deðeri türüne sahip bir iþlev bildirirsek bu sentaks hatasý
+
+
+Kalýtýmda
+Taban sýnýfýn sanal ya da saf sanal iþleviyle 
+ayný isimli 
+farklý imzaya sahip
+bir iþlev bildirirsek bu gecerli ancak bu durum function overriding deðil (overloading de deðil)
+
+
+
+
+
+class Base {
+public:
+	virtual void func(int, int);
+};
+
+
+class Der : public Base {
+public:
+	void func(int, int);  //override
+};
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+
+class Base {
+public:
+	virtual void func(int, int);
+};
+
+
+class Der : public Base {
+public:
+	int func(int, int);  //gecersiz
+};
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+
+
+
+class Base {
+public:
+	virtual void func(int, int);
+};
+
+
+class Der : public Base {
+public:
+	int func(int);  //gecerli
+};
+
+//--------------------------------------------------
+//--------------------------------------------------
+
+/*--------------------------------------------------------------------------------------------------------
+	friend bir sýnýf arkadaþ olduðu sýnýfýn private elemanlarýna eriþebilir
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+	 friend class Mample;
+private:
+	void Foo()
+	{
+		//...
+	}
+	int m_x;
+};
+
+class Mample {
+public:
+	void Bar()
+	{
+		Sample s;
+
+		s.m_x = 23;
+		s.Foo();
+	}
+};
+
+int main()
+{
+	Mample m;
+
+	m.Bar();	
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Global friend fonksiyonlar arkadaþ olduklarý sýnýfýn private elemanlarýna eriþebilirler
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+	friend void Bar(const Sample &r);
+public:
+	Sample(int x) : m_x(x)
+	{}
+private:
+	void Foo() const
+	{
+		cout << "Sample::Foo" << endl;
+	}
+	int m_x;
+};
+
+
+void Bar(const Sample &r)
+{
+	cout << r.m_x << endl;
+	r.Foo();
+}
+
+
+int main()
+{
+	Sample s(10);
+
+	Bar(s);
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir sýnýfýn üye fonksiyonu baþka bir sýnýfa arkadaþ olabilir
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class Sample;
+
+class Mample {
+	//...
+public:
+	void Bar(const Sample *r);
+};
+
+class Sample {
+	friend void Mample::Bar(const Sample *r);
+public:
+	Sample(int x) : m_x(x)
+	{}
+private:
+	void Foo() const
+	{
+		cout << "Sample::Foo" << endl;
+	}
+	int m_x;
+};
+
+void Mample::Bar(const Sample *r)
+{
+	cout << r->m_x << endl;
+	r->Foo();
+}
+
+int main()
+{
+	Sample s(30);
+
+	Mample m;
+
+	m.Bar(&s);
+	
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	operator << ve operator >> operatör fonksiyonlarý
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class Number {
+	friend istream &operator >>(istream &is, Number &r);
+public:
+	Number(int val = 0) : m_val(val)
+	{}
+	int GetVal() const { return m_val; }
+	void SetVal(int val)
+	{
+		m_val = val;
+	}
+private:
+	int m_val;
+};
+
+ostream &operator << (ostream &os, const Number &r) 
+{
+	return os << r.GetVal();
+}
+
+istream &operator >>(istream &is, Number &r)
+{
+	return is >> r.m_val;
+}
+
+int main()
+{
+	Number n(10);
+
+	cout << n << "\n";
+	cout << "Bir sayý giriniz\n";
+	cin >> n;
+
+	cout << n << "\n";
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Fonksiyon çaðýrma operatör fonksiyonlarý
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class Sample {
+public:
+	void operator()()
+	{
+		cout << "operator()()" << endl;
+	}
+
+	int operator()(int val)
+	{
+		cout << "operator()(int)" << endl;
+
+		return val * val;
+	}
+};
+
+int main()
+{
+	Sample s;
+
+	s();
+	cout << s(4) << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Fonksiyon çaðýrma operatör fonksiyonlarý
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class Number {
+	friend istream &operator >>(istream &is, Number &r);
+	friend ostream &operator << (ostream &os, const Number &r);	
+public:
+	Number(int val = 0) : m_val(val)
+	{}
+	int GetVal() const { return m_val; }
+	void SetVal(int val)
+	{
+		m_val = val;
+	}
+	Number operator()(int val) const;
+	void operator()() const;
+private:
+	int m_val;
+};
+
+
+void Number::operator()() const
+{
+	cout << *this << endl;
+}
+
+Number Number::operator()(int val) const
+{
+	return Number(m_val + val);
+}
+
+ostream &operator << (ostream &os, const Number &r)
+{
+	return os << r.GetVal();
+}
+
+istream &operator >>(istream &is, Number &r)
+{
+	return is >> r.m_val;
+}
+
+int main()
+{
+	Number n(10);
+
+	cout << n(20) << endl;
+
+	n();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Tür dönüþtürme operatör fonksiyonu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class Number {
+	friend istream &operator >>(istream &is, Number &r);
+	friend ostream &operator << (ostream &os, const Number &r);
+public:
+	Number(int val = 0) : m_val(val)
+	{}
+	int GetVal() const { return m_val; }
+	void SetVal(int val)
+	{
+		m_val = val;
+	}
+	Number operator()(int val) const;
+	void operator()() const;
+	explicit operator int() const ;
+private:
+	int m_val;
+};
+
+
+void Number::operator()() const
+{
+	cout << *this << endl;
+}
+
+Number Number::operator()(int val) const
+{
+	return Number(m_val + val);
+}
+
+Number::operator int() const
+{
+	return m_val;
+}
+
+ostream &operator << (ostream &os, const Number &r)
+{
+	return os << r.GetVal();
+}
+
+istream &operator >>(istream &is, Number &r)
+{
+	return is >> r.m_val;
+}
+
+int main()
+{
+	Number n(10);
+
+	int val = (int)n;
+
+	cout << val << endl;	
+		
+	return 0;
+}
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Complex sýnýfý
+---------------------------------------------------------------------------------------------------------*/
+
+
+// main.cpp
+
+#include <iostream>
+#include "Complex.hpp"
+
+using namespace std;
+
+int main()
+{
+	Complex x(3, 2), y;
+
+	y = x + 10;
+
+	y.disp();
+
+	return 0;
+}
+
+// main.cpp
+#include <iostream>
+
+#include "Complex.hpp"
+
+using namespace std;
+
+int main()
+{
+	Complex z;
+	cout << "Karmaþýk sayýyý giriniz\n";
+	cin >> z;
+
+	cout << z << endl;
+	
+	return 0;
+}
+
+//main.cpp
+
+#include <iostream>
+
+#include "Complex.hpp"
+
+using namespace std;
+
+int main()
+{
+	Complex z(3, 4);
+
+	cout << 3.4 + z << endl;
+	cout << 3.4 * z << endl;
+	cout << 3.4 - z << endl;
+	
+	return 0;
+}
+
+//main.cpp
+#include <iostream>
+#include "Complex.hpp"
+
+using namespace std;
+
+int main()
+{
+	Complex z(3, 4);
+
+	z();
+
+		
+	return 0;
+}
+
+//main.cpp
+#include <iostream>
+#include "Complex.hpp"
+
+using namespace std;
+
+int main()
+{
+	Complex z(3, 4);
+
+	cout << (double)z << endl;	
+		
+	return 0;
+}
+
+#ifndef COMPLEX_HPP_
+#define COMPLEX_HPP_
+
+#include <iostream>
+#include <cmath>
+
+class Complex {
+	friend std::ostream &operator <<(std::ostream &os, const Complex &r);
+	friend std::istream &operator >>(std::istream &is, Complex &r);
+	friend Complex operator +(double x, const Complex &r);
+	friend Complex operator *(double x, const Complex &r);
+	friend Complex operator -(double x, const Complex &r);
+public:
+	Complex();
+	Complex(double real, double imag = 0);
+public:
+	double &Real() { return  m_real; }
+	const double &Real() const { return  m_real; }
+	double &Imag() { return  m_imag; }
+	const double &Imag() const { return  m_imag; }
+	double Norm() const;
+public:
+	void disp() const;
+public:	
+	Complex operator +(const Complex &x) const;
+	Complex operator +(double x) const;
+	Complex operator -(const Complex &x) const;
+	Complex operator *(const Complex &x) const;
+	Complex operator -() const;
+	Complex &operator ++();			// prefix
+	const Complex operator ++(int);	// postfix
+	void operator()() const;
+	explicit operator double() const;
+private:
+	double m_real, m_imag;
+};
+
+#endif
+
+#include <iostream>
+#include <cmath>
+#include "Complex.hpp"
+
+using namespace std;
+
+ostream &operator<<(ostream &os, const Complex &r)
+{
+	os << r.m_real;
+	if (r.m_imag != 0) {
+		os << (r.m_imag < 0 ? "-" : "+");
+		if (fabs(r.m_imag) != 1)
+			os << fabs(r.m_imag);
+		os << "i";
+	}
+
+	return os;
+}
+
+istream &operator >>(istream &is, Complex &r)
+{
+	return is >> r.m_real >> r.m_imag;
+}
+
+Complex operator +(double x, const Complex &r)
+{
+	return r + x;
+}
+
+Complex operator *(double x, const Complex &r)
+{
+	return r * x;
+}
+
+Complex operator -(double x, const Complex &r)
+{
+	return x + -r;
+	//return -1 * (r - x);
+}
+
+Complex::Complex() 
+{
+	m_real = m_imag = 0;
+}
+
+Complex::Complex(double real, double imag)
+{
+	m_real = real;
+	m_imag = imag;
+}
+
+inline double Complex::Norm() const 
+{
+	return sqrt(m_real * m_real + m_imag * m_imag);
+}
+
+void Complex::disp() const
+{
+	cout << m_real;
+	if (m_imag != 0) {
+		cout << (m_imag < 0 ? "-" : "+");
+		if (fabs(m_imag) != 1)
+			cout << fabs(m_imag);
+		cout << "i";
+	}
+	cout << endl;
+}
+
+Complex Complex::operator +(const Complex &x) const
+{
+	Complex result;
+
+	result.m_real = m_real + x.m_real;
+	result.m_imag = m_imag + x.m_imag;
+	
+	return result;
+}
+
+Complex Complex::operator +(double x) const
+{
+	Complex result;
+
+	result.m_real = m_real + x;
+	result.m_imag = m_imag;
+
+	return result;
+}
+
+Complex Complex::operator -(const Complex &x) const
+{
+	Complex result;
+
+	result.m_real = m_real - x.m_real;
+	result.m_imag = m_imag - x.m_imag;
+
+	return result;
+}
+
+Complex Complex::operator *(const Complex &x) const
+{
+	Complex result;
+
+	result.m_real = m_real * x.m_real - m_imag * x.m_imag;
+	result.m_imag = m_real * x.m_imag + m_imag * x.m_real;
+
+	return result;
+}
+
+Complex Complex::operator -() const
+{
+	Complex result;
+
+	result.m_real = -m_real;
+	result.m_imag = -m_imag;
+
+	return result;
+}
+
+Complex &Complex::operator ++()
+{
+	++m_real;
+
+	return *this;
+}
+
+const Complex Complex::operator ++(int)
+{
+	Complex result = *this;
+
+	++m_real;
+
+	return result;
+}
+
+void Complex::operator()() const
+{
+	cout << *this << endl;
+}
+
+Complex::operator double() const
+{
+	return Norm();
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	static_cast tür dönüþtürme operatörü
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+int main()
+{
+	srand(static_cast<unsigned int>(time(0)));
+
+	for (int i = 0; i < 10; ++i)
+		cout << rand() % 100 << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	const_cast tür dönüþtürme operatörü const bir adresi ayný türden const olmayan adrese dönüþtürür
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int a = 45;
+	const int *pc = &a;
+	int *p;
+	
+	p = const_cast<int *>(pc);
+
+	*p = 20;
+
+	cout << a << endl;
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	reinterpret_cast operatörü farklý türden adresleri dönüþtürmek için kullanýlýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
+int IsLittleEndian()
+{
+	int16_t x = 1;
+
+	return *reinterpret_cast<char *>(&x) == 1;
+}
+
+int main()
+{
+	cout << (IsLittleEndian() ? "Little endian" : "Big Endian") << endl;		
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Aþaðýdaki örnekte const bir adres farklý türden const olmayan bir adrese dönüþtürülmüþtür.
+	Aþaðýdaki gibi iki þekilde yapýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int a = 10;
+	const int *pc = &a;
+	long *p1 = reinterpret_cast<long *>(const_cast<int *>(pc));
+	long *p2 = const_cast<long *>(reinterpret_cast<const long *>(pc));
+
+	//...
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	qsort fonksiyonu ile void * göstericiler sayesinde türden baðýmsýz iþlem yapmak mümkündür.
+	Ancak yine de kod karmaþýk gözükebilmektedir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int CompInt(const void *pv1, const void *pv2)
+{
+	int *p1 = (int *)pv1;
+	int *p2 = (int *)pv2;
+
+	return *p1 - *p2;
+}
+
+int main()
+{
+	int a[] = {-4, 9, -6, 7, -9, 2, -3};
+
+	qsort(a, 7, sizeof(int), CompInt);
+
+	for (int i = 0; i < 7; ++i)
+		cout << a[i] << " ";
+
+
+	cout << "\n";
+
+	
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	template fonksiyon tanýmlamasý
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+template <class T>
+void Foo(T t)
+{
+	//...	
+}
+
+template <typename T1, typename T2>
+T2 Add(T1 t1, T2 t2)
+{
+	//...
+}
+
+
+int main()
+{
+	
+	
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Template fonskiyonlar açým yaparak çaðrýlabilir. Bu durumda derleyici her açým için bir yeni bir 
+	fonksiyon yazar. Þüphesiz daha önceden açým yapýlan tür için yeni bir çaðrýda yeni fonksiyon 
+	yazmaz
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <class T>
+void Foo(T t)
+{
+	cout << t << endl;
+}
+
+int main()
+{
+	Foo<int>(10);
+	Foo<const char *>("ANKARA");
+	Foo<string>("izmir");
+	Foo<int>(20);	
+	
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Template parametrelerin hepsi fonksiyon parametresi olarak kullanýlmýþsa bu durumda açým
+	yapmaya gerek olmaz
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+void Foo(T t)
+{
+	cout << t << endl;
+}
+
+int main()
+{
+	Foo(10);
+	Foo("ANKARA");
+	Foo(string("izmir"));
+	Foo(20);	
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Template parametrelerin hepsi fonksiyon parametresi olarak kullanýlmýþsa bu durumda açým
+	yapmaya gerek olmaz
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T, typename K>
+void Foo(T t, K k)
+{
+	cout << t << endl;
+	cout << k << endl;
+}
+
+int main()
+{
+	Foo<int, string>(10, "ankara");
+	Foo(10, 3.4);
+	
+	return 0;
+}
+
+/*--/*--------------------------------------------------------------------------------------------------------
+	Template parametreler için çaðrý yapýldýðýnda açýlýmlar için bir kýsmý verilip bir kýsmý
+	tür tespitine býrakýlabilir. Ancak açýlacak türün soldan baþlayarak verilmesi gerekir. Yani 
+	sadece aradaki bir türün açýlmasý mümkün deðildir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T1, typename T2, typename T3>
+T3 Add(T1 t1, T2 t2)
+{
+	return t1 + t2;
+}
+
+int main()
+{
+	cout << Add<int, int, int>(10, 20) << endl;
+	cout << Add<int, double, double>(10, 2.3) << endl;
+
+	return 0;
+}
+
+------------------------------------------------------------------------------------------------------
+	Template parametreler için çaðrý yapýldýðýnda açýlýmlar için bir kýsmý verilip bir kýsmý
+	tür tespitine býrakýlabilir. Ancak açýlacak türün soldan baþlayarak verilmesi gerekir. Yani 
+	sadece aradaki bir türün açýlmasý mümkün deðildir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T1, typename T2, typename T3>
+void Foo(T1 t1, T2 t2, T3 t3)
+{
+	cout << t1 << endl;
+	cout << t2 << endl;
+	cout << t3 << endl;
+}
+
+int main()
+{
+	Foo<int>(10.4, "ankara", true);
+	Foo<double, string>(10.4, "ankara", 45);
+	
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Template parametreler için çaðrý yapýldýðýnda açýlýmlar için bir kýsmý verilip bir kýsmý
+	tür tespitine býrakýlabilir. Ancak açýlacak türün soldan baþlayarak verilmesi gerekir. Yani 
+	sadece aradaki bir türün açýlmasý mümkün deðildir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T1, typename T2, typename T3>
+T1 Add(T2 a, T3 b)
+{
+	return a + b;
+}
+
+int main()
+{
+	cout << Add<int>(10, 20) << endl;
+	cout << Add<double>(10, 2.3) << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Template fonksiyonlar tür için derleyici tarafýndan yazýlýrken sentaks ve semantik kontrol yapýlýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+void Foo(const T &t)
+{
+	cout << t << endl;
+}
+
+class Sample {
+public:
+	
+
+};
+
+int main()
+{
+	Foo(10);
+	Sample s;
+
+	Foo(s); //error
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	template parametreler fonksiyon göstericisi olarak da açýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T, typename F>
+void ForEach(const T *p, size_t size, F fn)
+{
+	for (size_t i = 0; i < size; ++i)
+		fn(p[i]);
+}
+
+template <typename T>
+void Display(const T &r)
+{
+	cout << r << endl;
+}
+
+int main()
+{
+	int a[] = { 1, 2, 3, 4, 5, 6 };
+
+	ForEach(a, 6, Display<int>);
+
+	string names[] = {"ankara", "istanbul","izmir"};
+
+	ForEach(names, 3, Display<string>);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Þablon bir Swap fonksiyonu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+void Swap(T &r1, T &r2)
+{
+	T temp = r1;
+
+	r1 = r2;
+	r2 = temp;
+}
+
+int main()
+{
+	int a = 10, b = 20;
+	string s1("ankara"), s2("istanbul");
+
+	Swap(a, b);
+	Swap(s1, s2);
+
+	cout << "a=" << a << endl;
+	cout << "b=" << b << endl;
+	cout << "s1=" << s1 << endl;
+	cout << "s2=" << s2 << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Þablon fonksiyonlar ile ayný isimde fonksiyon yazýlabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+void Foo(const T &r)
+{
+	cout << "Foo(T)" << endl;
+	cout << r << endl;
+}
+
+void Foo(int val)
+{
+	cout << "Foo(int)" << endl;
+	cout << val << endl;
+}
+
+int main()
+{
+	Foo(10);
+	Foo(10.3);
+	Foo<int>(23);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Þablon fonksiyonlar
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+#include "Complex.hpp"
+#include "Rational.hpp"
+
+using namespace std;
+
+template <typename T>
+T Add(const T &t1, const T &t2)
+{
+	return t1 + t2;
+}
+
+int main()
+{
+	cout << Add(string("ankara"), string("istanbul")) << endl;	
+
+	Complex z1(3, 4), z2(5, -7);
+
+	cout << Add(z1, z2) << endl;
+	
+	Rational r1(2, 3), r2(5, -6);
+
+	cout << Add(r1, r2) << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Þablon fonksiyonlar
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+T Max(const T *p, size_t size)
+{
+	T max = *p;
+
+	for (size_t i = 1; i < size; ++i)
+		if (max < p[i])
+			max = p[i];
+
+	return max;
+}
+
+int main()
+{
+	int a[] = {1, -5, 6, 7};
+	string str[] = { "zonguldak", "bolu", "adana", "ankara"};
+
+	string city = Max(str, 4);
+	int max = Max(a, 4);
+
+	cout << city << endl;
+	cout << max << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Þablon fonksiyonlar
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+#include "Complex.hpp"
+
+using namespace std;
+
+template <typename T>
+T Sum(const T *p, size_t size)
+{
+	T sum = T();
+
+	for (size_t i = 0; i < size; ++i)
+		sum = sum + p[i]; //operator +: Dikkat += kullanýlsaydý operator += fonskiyonu da yazýlmasý gerekirdi
+	   
+	return sum;
+}
+
+int main()
+{
+	int a[] = {1, -5, 6, 7};
+	string str[] = { "zonguldak", "bolu", "adana", "ankara"};
+	Complex c[] = {Complex(3, 4), Complex(3, -9) };
+
+	string s = Sum(str, 4);
+	int sum = Sum(a, 4);
+	Complex z = Sum(c, 2);
+
+	cout << s << endl;
+	cout << sum << endl;
+	cout << z << endl;
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	sort fonksiyonu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+template <typename T>
+void Display(const T *p, size_t size)
+{
+	for (int i = 0; i < size; ++i)
+		cout << p[i] << " ";
+
+	cout << "\n";
+}
+
+int main()
+{
+	int a[] = {1, -5, 6, 7};
+	string str[] = { "zonguldak", "bolu", "adana", "ankara"};
+
+	sort(a, a + 4);
+	sort(str, str + 4);
+
+	Display(a, 4);
+	Display(str, 4);	
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	sort fonksiyonu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+template <typename T>
+void Display(const T *p, size_t size)
+{
+	for (int i = 0; i < size; ++i)
+		cout << p[i] << " ";
+
+	cout << "\n";
+}
+
+bool CompInt(int a, int b)
+{
+	return b <= a;
+}
+
+bool CompStr(const string &s1, const string &s2)
+{
+	return s2 <= s1;
+}
+
+int main()
+{
+	int a[] = {1, -5, 6, 7};
+	string str[] = { "zonguldak", "bolu", "adana", "ankara"};
+
+	sort(a, a + 4, CompInt);
+	sort(str, str + 4, CompStr);
+
+	Display(a, 4);
+	Display(str, 4);	
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	fill fonksiyonu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+template <typename T>
+void Display(const T *p, size_t size)
+{
+	for (int i = 0; i < size; ++i)
+		cout << p[i] << " ";
+
+	cout << "\n";
+}
+
+int main()
+{
+	int a[10];
+	string str[10];
+
+	fill(a, a + 10, -1);
+	fill(str, str + 10, string());	
+
+	Display(a, 4);
+	Display(str, 4);	
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	reverse fonksiyonu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+template <typename T>
+void Display(const T *p, size_t size)
+{
+	for (int i = 0; i < size; ++i)
+		cout << p[i] << " ";
+
+	cout << "\n";
+}
+
+int main()
+{
+	int a[] = { 1, -5, 6, 7 };
+	string str[] = { "zonguldak", "bolu", "adana", "ankara" };
+
+	reverse(a, a + 4);
+	reverse(str, str + 4);
+
+	Display(a, 4);
+	Display(str, 4);	
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	template sýnýf bildirimi
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class Sample {
+public:
+	Sample(const T &t) : m_t(t)
+	{}
+public: 
+	void Display()
+	{
+		cout << m_t << endl;
+	}
+private:
+	T m_t;	
+};
+
+
+int main()
+{
+	
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	template sýnýflar sýnýf dýþýnda açým yapýlmadan kullanýlamaz
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class Sample {
+public:
+	Sample(const T &t) : m_t(t)
+	{}
+public: 
+	void Display() const
+	{
+		cout << m_t << endl;
+	}
+private:
+	T m_t;	
+};
+
+
+int main()
+{
+	Sample<int> s(10);
+
+	s.Display();
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	template sýnýflarýn üye fonksiyonlarý sýnýf dýþýnda bildirilirken de template kullanýlmalýdýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class Sample {
+public:
+	Sample(const T &t);
+public: 
+	void Display() const;
+private:
+	T m_t;	
+};
+
+template <typename T>
+Sample<T>::Sample(const T &t) : m_t(t)
+{}
+
+template <typename T>
+void Sample<T>::Display() const
+{
+	cout << m_t << endl;
+}
+
+int main()
+{
+	Sample<int> s(10);
+
+	s.Display();
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	template sýnýflarýn özelleþtirilmesi
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class Sample {
+public:
+	Sample(const T &t);
+public: 
+	void Display() const;
+private:
+	T m_t;	
+};
+
+template <typename T>
+Sample<T>::Sample(const T &t) : m_t(t)
+{}
+
+template <typename T>
+void Sample<T>::Display() const
+{
+	cout << "Sample<T>" << endl;
+	cout << m_t << endl;
+}
+
+template <>
+class Sample<int> {
+public:
+	Sample(const int &val) : m_val(val)
+	{}
+public:
+	void Display() const
+	{
+		cout << "Sample<int>" << endl;
+		cout << m_val << endl;
+	}
+private:
+	int m_val;
+};
+
+int main()
+{
+	Sample<double> sd(3.4);
+
+	sd.Display();
+
+	Sample<int> si(10);
+
+	si.Display();
+
+	return 0;
+}
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýr kontrolü yapan basit bir Array sýnýfý ve test kodlarý
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include "Array.hpp"
+
+using namespace std;
+
+
+int main()
+{
+	Array<int> a(20);
+
+	for (int i = 0; i < 20; ++i)
+		a[i] = i * 10;
+
+	for (size_t i = 0; i < a.GetSize(); ++i)
+		cout << a[i] << " ";
+
+	cout << endl;
+
+	return 0;
+}
+
+//main.cpp
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include "Array.hpp"
+
+using namespace std;
+
+void Display(Array<int> a)
+{
+	for (size_t i = 0; i < a.GetSize(); ++i)
+		cout << a[i] << " ";
+
+	cout << endl;
+}
+
+int main()
+{
+	Array<int> a;
+
+	srand(static_cast<unsigned int>(time(0)));
+
+	for (int i = 0; i < a.GetSize(); ++i)
+		a[i] = rand() % 101;
+
+	Display(a);
+	Display(a);
+
+	return 0;
+}
+
+//main.cpp
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include "Array.hpp"
+
+using namespace std;
+
+void Display(Array<int> a) //Kötü teknik
+{
+	for (size_t i = 0; i < a.GetSize(); ++i)
+		cout << a[i] << " ";
+
+	cout << endl;
+}
+
+int main()
+{
+	Array<int> a;
+
+	srand(static_cast<unsigned int>(time(0)));
+
+	for (int i = 0; i < a.GetSize(); ++i)
+		a[i] = rand() % 101;
+
+	Display(a);
+
+	a = a; //self assignment
+
+	{
+		Array<int> b;
+
+		b = a; //operator =
+	}
+
+	Display(a);
+
+	return 0;
+}
+
+//Array.hpp
+#ifndef ARRAY_HPP_
+#define ARRAY_HPP_
+
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+
+template <typename T>
+class Array {
+public:
+	Array(size_t size = 10) : m_p(new T[size]), m_size(size)
+	{}
+	Array(const Array &r);
+	Array &operator =(const Array &r);
+	//...
+	~Array() 
+	{
+		delete[] m_p;
+	}
+	size_t GetSize() const { return m_size; }
+	T &operator [](size_t index);
+	const T &operator [](size_t index) const;
+private:
+	static void controlBounds(const char * str);
+private:
+	T *m_p;
+	size_t m_size;	
+};
+
+template <typename T>
+void Array<T>::controlBounds(const char *str)
+{
+	std::cerr << str << std::endl;
+	exit(EXIT_FAILURE); //Exception konusuna kadar sabýr
+}
+
+template <typename T>
+Array<T>::Array(const Array &r) : m_p(new T[r.m_size]), m_size(r.m_size)
+{
+	std::memcpy(m_p, r.m_p, sizeof(T) * m_size);
+}
+
+template <typename T>
+Array<T> &Array<T>::operator =(const Array &r)
+{
+	if (this == &r) //self assignement
+		return *this;
+
+	delete[] m_p;
+	m_size = r.m_size;
+	m_p = new T[m_size];
+	memcpy(m_p, r.m_p, sizeof(T) * m_size);
+
+	return *this;
+}
+
+template <typename T>
+T &Array<T>::operator [](size_t index)
+{
+	if (index >= m_size)
+		controlBounds("out of range");
+		
+	return m_p[index];
+}
+
+template <typename T>
+const T &Array<T>::operator [](size_t index) const
+{
+	if (index >= m_size)
+		controlBounds("const out of range");
+
+	return m_p[index];
+}
+
+#endif // ARRAY_HPP_
+
+/*--------------------------------------------------------------------------------------------------------
+	Þablon parametreler bir türe iliþkin olabilir. Bu durumda bu parametre açýlýmda sabit ifadesi
+	olarak geçilmelidir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+
+using namespace std;
+
+template <typename T, size_t N>
+class Sample {
+	//...
+public:
+	T a[N];
+};
+
+int main()
+{
+	int n = 10;
+
+	Sample<int, 10> s;
+	
+
+
+	return 0;
+}
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	default template parametreleri
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+template <typename T, size_t N = 10>
+class Sample {
+	//...
+public:
+	T a[N];
+};
+
+int main()
+{
+	int n = 10;
+
+	Sample<string> s;
+	
+
+
+	return 0;
+}
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Karmaþýk template açýlýmlarýnda typedef kullanýmý temasý
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+#include "Array.hpp"
+
+using namespace std;
+
+
+template <typename T, size_t N = 10>
+class Sample {
+	//...
+public:
+	T a[N];
+};
+
+typedef Sample<Array<string>> SArray;
+
+int main()
+{
+	int n = 10;
+
+	SArray s;	
+
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn üye fonksiyonlarý da template olabilir (member template). Bu durumda sýnýf dýþýnda
+	iki tane template ile tanýmlanmalýdýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+class Sample {
+public:
+	template <typename K>
+	void Foo(T t, K k);
+private:
+	T m_t;
+};
+
+template <typename T>
+template <typename K>
+void Sample<T>::Foo(T t, K k)
+{
+	//...
+}
+
+int main()
+{
+	Sample<int> s;
+
+	s.Foo(10, "ankara");
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Sýnýfýn üye fonksiyonlarý da template olabilir (member template). Bu durumda sýnýf dýþýnda
+	iki tane template ile tanýmlanmalýdýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+class Sample {
+public:
+	template <typename K>
+	static void Foo(T t);
+private:
+	T m_t;
+};
+
+template <typename T>
+template <typename K>
+void Sample<T>::Foo(T t)
+{
+	//...
+}
+
+int main()
+{
+	Sample<int>::Foo<string>(10);
+
+	return 0;
+}
+
+//Array.hpp
+#ifndef ARRAY_HPP_
+#define ARRAY_HPP_
+
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+
+template <typename T, size_t SIZE = 10>
+class Array {
+public:	
+	size_t GetSize() const { return SIZE; }
+	T &operator [](size_t index);
+	const T &operator [](size_t index) const;
+private:
+	static void controlBounds(const char * str);
+private:
+	T m_p[SIZE];	
+};
+
+template <typename T, size_t SIZE>
+void Array<T, SIZE>::controlBounds(const char *str)
+{
+	std::cerr << str << std::endl;
+	exit(EXIT_FAILURE); //Exception konusuna kadar sabýr
+}
+
+
+template <typename T, size_t SIZE>
+T &Array<T, SIZE>::operator [](size_t index)
+{
+	if (index >= SIZE)
+		controlBounds("out of range");
+		
+	return m_p[index];
+}
+
+template <typename T, size_t SIZE>
+const T &Array<T, SIZE>::operator [](size_t index) const
+{
+	if (index >= SIZE)
+		controlBounds("const out of range");
+
+	return m_p[index];
+}
+
+#endif // ARRAY_HPP_
+
+/*--------------------------------------------------------------------------------------------------------
+	template bir fonksiyon bir sýnýfa friend olabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Sample {
+	template <typename T>
+	friend void Foo(T t, const Sample &r);
+};
+
+
+template <typename T>
+void Foo(T t, const Sample &r)
+{
+	//...
+}
+
+
+
+int main()
+{
+	Sample s;
+
+	Foo(10, s);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	template bir fonksiyon bir template sýnýfa friend olabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template <typename T>
+class Sample {
+	template <typename K>
+	friend void Foo(K k, const Sample<T> &r);
+};
+
+template <typename T, typename K>
+void Foo(K k, const Sample<T> &r)
+{
+	//...
+}
+
+
+
+int main()
+{
+	Sample<int> s;
+
+	Foo(10, s);
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir sýnýf template bir sýnýfýn herhangi bir açýlýmýndan türetilebilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class A {
+	//...
+};
+
+class B : public A<int> {
+
+};
+
+int main()
+{
+	B b;   
+	
+
+	return 0;
+}
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	template bir sýnýf template bir sýnýfýn herhangi bir açýlýmýndan türetilebilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class A {
+	//...
+};
+
+template <typename T>
+class B : public A<int> {
+
+};
+
+int main()
+{
+	B<bool> b;   
+	B<int> b1;
+	
+
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	template bir sýnýf template bir sýnýftan türetilebilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class A {
+	//...
+};
+
+template <typename T>
+class B : public A<T> {
+
+};
+
+int main()
+{
+	B<bool> b;   
+	B<int> b1;
+	
+
+	return 0;
+}
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	template bir sýnýf template bir sýnýftan türetilebilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class A {
+	//...
+};
+
+template <typename T, typename K>
+class B : public A<K> {
+
+};
+
+int main()
+{
+	B<bool, int> b;   
+	B<int, double> b1;
+	
+
+	return 0;
+}
+
+
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	vector sýnýfý ve test kodu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+	vector<string> svec;
+	string s;
+	cout << "Yazýlarý girmeye baþlayýnýz";
+
+	for (;;) {
+		cin >> s;
+		if (s == "exit")
+			break;
+
+		svec.push_back(s);
+	}
+
+	for (int i = 0; i < svec.size(); ++i)
+		cout << svec[i] << " ";
+
+	cout << endl;
+
+	return 0;
+}
+
+
+
+/*--------------------------------------------------------------------------------------------------------
+	downcasting iþlemi explicit yapýlmalýdýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	int x;
+};
+
+class B : public A {
+public:
+	int y;
+};
+
+
+
+int main()
+{
+	B b;
+
+	b.x = 30;
+	b.y = 20;
+	A &a = b;
+
+	cout << a.x << endl;
+
+	B &br = static_cast<B &>(a);
+
+	cout << br.y << endl;
+
+		
+	return 0;
+}
+/*--------------------------------------------------------------------------------------------------------
+	1) Biyolojik Taným: Çok biçimlilik taban sýnýfýn belli bir fonksiyonunun 
+	türemiþ sýnýflar tarafýndan temel iþlevi ayný kalmak üzere onlara özgü 
+	bir biçimde tanýmlanmasýdýr.
+
+	2) Yazýlým Mühendisliði Tanýmý: Çokbiçimlilik türden baðýmsýz kod parçalarýnýn
+	yazýlabilmesi için kullanýlan bir tekniktir.
+
+	3) Aþaðý Seviyeli Taným: Çokbiçimlilik önceden yazýlmýþ kodlarýn sonradan 
+	yazýlacak kodlarý çaðýrabilmesi özelliðidir. 
+---------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------
+	Çok biçimlilik sanal fonksiyonlar ile yapýlýr. Bir fonskiyon referans veya gösterici
+	ile çaðrýldýðýnda o an referansýn gösterdiði gerçek nesnenin türü ne ise ona iliþkin
+	override edilmiþ fonksiyon varsa çaðrýlýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	virtual void Foo() // Sanal fonksiyon
+	{
+		cout << "A::Foo\n";
+	}
+};
+
+class B : public A {
+public:
+	virtual void Foo()
+	{
+		cout << "B::Foo\n";
+	}
+};
+
+int main()
+{	
+	B b;
+
+	b.Foo();
+
+	A &a = b;
+
+	a.Foo();
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir dizi türetme durumu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	virtual void Foo()
+	{
+		cout << "A::Foo\n";
+	}
+};
+
+class B : public A {
+public:
+	virtual void Foo()
+	{
+		cout << "B::Foo\n";
+	}
+};
+
+class C : public B {
+public:
+	virtual void Foo()
+	{
+		cout << "C::Foo\n";
+	}
+};
+
+int main()
+{	
+	C c;
+
+	A &a = c;
+
+	a.Foo();
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir dizi türetme durumu
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	virtual void Foo()
+	{
+		cout << "A::Foo\n";
+	}
+};
+
+class B : public A {
+public:
+	virtual void Foo()
+	{
+		cout << "B::Foo\n";
+	}
+};
+
+class C : public B {
+
+};
+
+int main()
+{	
+	C c;
+
+	A &a = c;
+
+	a.Foo();
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Aþaðýdaki durumda B sýnýfýnda Foo fonksiyonu override edilmemiþtir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	virtual void Foo(int a)
+	{
+		cout << "A::Foo\n";
+	}
+};
+
+class B : public A {
+public:
+	virtual void Foo(double a)
+	{
+		cout << "B::Foo\n";
+	}
+};
+
+
+
+int main()
+{	
+	B b;
+
+	A *p = &b;
+
+	p->Foo(2.3);	
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	override anahtar sözcüðü ile bir fonksiyonun taban sýnýftan override edilip edilmediði
+	derleme zamanýnda da kontrol edilir. override anahtar sözcüðü okunabilirliði de artýrýr
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	virtual void Foo(int a)
+	{
+		cout << "A::Foo\n";
+	}
+};
+
+class B : public A {
+public:
+	void Foo(int a) override
+	{
+		cout << "B::Foo\n";		
+	}
+};
+
+
+
+int main()
+{	
+	B b;
+
+	A *p = &b;
+
+	p->Foo(2.3);	
+		
+	return 0;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir sýnýf bir fonksiyonu override etmek zorunda deðildir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	virtual void Foo(int a)
+	{
+		cout << "A::Foo\n";
+	}
+};
+
+class B : public A {
+public:
+	
+};
+
+class C : public B {
+public:
+	void Foo(int a) override
+	{
+		cout << "C::Foo\n";
+	}
+};
+
+
+int main()
+{	
+	C c;
+
+	A *p = &c;
+
+	p->Foo(2.3);	
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Aþaðýdaki örnekte bir sýnýf türetmeye kapatýlmýþtýr. Her istendiðinde dinamik olarak bir adres
+	döndüren bir fonksiyon yazýlmýþtýr. Bu tasarým farklý þekilde yapýlabilir. Bu tasarýmda 
+	nesneyi delete etmek GetInstance çaðýranýn sorumluluðudadýr.
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	static A *GetInstance()
+	{
+		return new A;
+	}
+private:
+	A() {}
+};
+
+
+int main()
+{	
+	A *p = A::GetInstance();
+
+
+	delete p;
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	final anahtar sözcüðü ile bir sýnýf türetmeye kapatýlabilir. Bu durumda extra yapýlacak
+	bir iþ yoktur. Yani constructor ýn dýþarýdan çaðrýlamamasýný saðlayan bir kod yazýlmayabilir
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A final {
+	//...
+};
+
+class B : public A {}; //error
+
+int main()
+{	
+	A a;
+
+	B b;
+
+
+	
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir fonksiyon override ve final olarak bildirilirse o fonksiyonun ait olduðu sýnýftan
+	türetme yapýldýðýnda artýk override edilemez
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public: 
+	virtual void Foo(int val)
+	{
+		cout << "A::Foo" << endl;
+	}
+};
+
+class B : public A {
+public:
+	void Foo(int val) override final
+	{
+		cout << "A::Foo" << endl;
+	}
+};
+
+class C : public B {
+public:
+	void Foo(int val) override //error
+	{
+		cout << "A::Foo" << endl;
+	}
+};
+
+int main()
+{	
+	A a;
+
+	B b;
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	override edilen fonksiyonlar içerisinde taban sýnýfýn fonksiyonunu çaðrýlmasýna
+	çok sýk rastlanýr. Bu durumda programcý aslýnda hem kendi iþini hem de taban sýnýfýn
+	yaptýðý iþi de içeren bir fonksiyon yazmýþ olur
+---------------------------------------------------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	virtual void Foo(int val)
+	{
+		cout << "A::Foo\n";
+	}
+
+};
+
+class B : public A {
+public:
+	void Foo(int val) override
+	{
+		cout << "B::Foo\n";
+		A::Foo(val);
+	}
+};
+
+class C : public B {
+public:
+	void Foo(int val) override
+	{
+		cout << "C::Foo\n";
+		B::Foo(val);
+	}
+};
+
+int main()
+{	
+	C c;
+
+	A &a = c;
+
+	a.Foo(10);
+	
+		
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Bazý çokbiçimli uygulamalarda taaban sýnýftaki sanal fonksiyonlar aslýnda hiç çaðrýlmazlar. Bunlar
+	türden baðýmsýz çokbiçimli iþlem yapmak için bulundurulmuþtur. Ýþte sanal fonksiyon bildiriminde = 0
+	sentaksý kullanýlýrsa bu tür sanal fonskiyonlara "saf sanal fonksiyonlar (pure virtual functions)" 
+	denilmektedir. En az bir saf sanal fonksiyona sahip olan sýnýfa da "soyut sýnýf (abstract class)" denir. 
+	Soyut sýnýflar türünden nesneler yaratýlamazlar. Ancak göstericiler ce referanslar tanýmlanabilirler.
+---------------------------------------------------------------------------------------------------------*/
+
+class Shape {
+public:
+	virtual void move_down() = 0;
+	virtual void move_left() = 0;
+	virtual void move_right() = 0;
+	virtual void rotate() = 0;
+};
+
+/*--------------------------------------------------------------------------------------------------------
+	Bir soyut sýnýftan türetilen sýnýflar taban sýnýfýn saf sanal fonksiyonlarýný override etmelidir. Aksi 
+	takdirde türemiþ sýnýf da soyut olur. Türemiþ sýnýf türünden de nesneler yaratamayýz.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+
+using namespace std;
+
+class A {
+	virtual void foo() = 0;
+};
+
+class B : public A {
+	//...
+};
+
+int main()
+{	
+	A a;		// error!
+	B b;		// error!
+			
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Saf sanal fonksiyonlar türemiþ sýnýfta override edilmezlerse türemiþ sýnýflar da soyut olur
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+	virtual void foo() = 0;
+};
+
+class B : public A {
+public:
+	void foo() override;
+};
+
+void B::foo()
+{
+	cout << "B::foo" << endl;
+}
+
+int main()
+{	
+	B b;		// geçerli
+
+	b.foo();
+			
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Taban A isimli soyut sýnýfýn bir grup saf sanal fonksiyonu ondan türetilmiþ olan B sýnýfýnda override
+	edilmiþ olsun. Geri kalan saf sanal fonksiyonlarýn da B'den türetilmiþ olan C sýnýfýnda override edildiðini
+	varsayalým. Bu durumda B sýnýfý soyuttur, fakat C sýnýfý soyut deðildir.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+	virtual void foo() = 0;
+	virtual void bar() = 0;
+};
+
+class B : public A {
+public:
+	void foo() override;
+};
+
+void B::foo()
+{
+	cout << "B::foo" << endl;
+}
+
+class C : public B {
+public:
+	void bar() override;
+};
+
+void C::bar()
+{
+	cout << "C::bar" << endl;
+}
+
+int main()
+{	
+	C c;
+
+	c.foo();
+	c.bar();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	try-catch bloklarýnýn organizasyonu
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{	
+	try {
+		//...
+	}
+	catch (int) {
+		//...
+	}
+	catch (long) {
+		//...
+	}
+	catch (double) {
+		//...
+	}
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Programýn akýþý throw anahtar sözcüðünü gördüðünde akýþ bir goto gibi throw deyiminin iliþkin olduðu
+	catch bloðuna aktarýlýr.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+void foo(int a);
+
+int main()
+{	
+	cout << "main begins..." << endl;
+	try {
+		foo(-10);
+	}
+	catch (int) {
+		cout << "int catch block..." << endl;
+	}
+	catch (long) {
+		cout << "long catch block..." << endl;
+	}
+	catch (double) {
+		cout << "double catch block..." << endl;
+	}
+	cout << "main ends..." << endl;
+
+	return 0;
+}
+
+void foo(int a)
+{
+	cout << "foo begins..." << endl;
+
+	if (a < 0)
+		throw -1;
+
+	cout << "foo ends..." << endl;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	throw deyiminin yanýndaki ifadenin deðeri catcfh parametresine aktarýlmaktadýr
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+void foo(int a);
+
+int main()
+{	
+	cout << "main begins..." << endl;
+	try {
+		foo(-10);
+	}
+	catch (int a) {
+		cout << "int catch block: " << a << endl;
+	}
+	catch (long a) {
+		cout << "long catch block: " << a << endl;
+	}
+	catch (double a) {
+		cout << "double catch block: " << a << endl;
+	}
+	cout << "main ends..." << endl;
+
+	return 0;
+}
+
+void foo(int a)
+{
+	cout << "foo begins..." << endl;
+
+	if (a < 0)
+		throw -20;
+
+	cout << "foo ends..." << endl;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Eðer exception bir catch bloðu tarafýndan yakalanmazsa std::terminate fonksiyonu çaðrýlýr. Bu fonksiyon
+	da std::abort fonksiyonunu çaðýrýr ve program sonlandýrýlýr. 
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+void foo(int a);
+
+int main()
+{	
+	cout << "main begins..." << endl;
+	try {
+		foo(-10);
+	}
+	catch (int a) {
+		cout << "int catch block: " << a << endl;
+	}
+	catch (long a) {
+		cout << "long catch block: " << a << endl;
+	}
+	catch (double a) {
+		cout << "double catch block: " << a << endl;
+	}
+
+	cout << "main ends..." << endl;
+
+	return 0;
+}
+
+void foo(int a)
+{
+	cout << "foo begins..." << endl;
+
+	if (a < 0)
+		throw "this is test";
+
+	cout << "foo ends..." << endl;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Fonksiyon baþka bir fonksiyonu o da baþka bir fonksiyonu çaðýrmýþ olabilir. Ne kadar dipte olursak olalým
+	thwor iþlemi ile geri dönmemecesine son girilen try bloðunun uygun catch bloðuna akýþ aktarýlýr
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+void foo(int a);
+void bar(int a);
+void tar(int a);
+
+int main()
+{	
+	cout << "main begins..." << endl;
+	try {
+		foo(-10);
+	}
+	catch (int a) {
+		cout << "int catch block: " << a << endl;
+	}
+	catch (long a) {
+		cout << "long catch block: " << a << endl;
+	}
+	catch (double a) {
+		cout << "double catch block: " << a << endl;
+	}
+	catch (const char *str) {
+		cout << "const char * catch block: " << str << endl;
+	}
+	cout << "main ends..." << endl;
+
+	return 0;
+}
+
+void foo(int a)
+{
+	cout << "foo begins..." << endl;
+	bar(a);
+	cout << "foo ends..." << endl;
+}
+
+void bar(int a)
+{
+	cout << "bar begins..." << endl;
+	tar(a);
+	cout << "bar ends..." << endl;
+}
+
+void tar(int a)
+{
+	cout << "tar begins..." << endl;
+
+	if (a < 0)
+		throw "this is test";
+
+	cout << "tar ends..." << endl;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Programcý yeni kendi exception sýnýflarýný yaratmak yerine mümkün olduðunda zaten var olan
+	standart exception sýnýflarýný kullanabilir.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <string>
+#include <stdexcept>
+
+using namespace std;
+
+void foo(int a);
+void bar(int a);
+void tar(int a);
+
+int main()
+{	
+	cout << "main begins..." << endl;
+	try {
+		foo(-10);
+	}
+	catch (const invalid_argument &ia) {
+		cout << ia.what() << endl;
+	}
+		
+	cout << "main ends..." << endl;
+
+	return 0;
+}
+
+void foo(int a)
+{
+	cout << "foo begins..." << endl;
+	bar(a);
+	cout << "foo ends..." << endl;
+}
+
+void bar(int a)
+{
+	cout << "bar begins..." << endl;
+	tar(a);
+	cout << "bar ends..." << endl;
+}
+
+void tar(int a)
+{
+	cout << "tar begins..." << endl;
+
+	if (a < 0)
+		throw invalid_argument("value must not be negative!");
+
+	cout << "tar ends..." << endl;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Türemiþ sýnýf türünden bir throw iþlemi taban sýnýf türünden bir catch bloðu tarafýndan
+	yakalanabilir
+---------------------------------------------------------------------------------------------------------*/
+
+int main()
+{	
+	cout << "main begins..." << endl;
+	try {
+		foo(-10);
+	}
+	catch (const exception &ia) {
+		cout << ia.what() << endl;
+	}
+			
+	cout << "main ends..." << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Taban ve türemiþ sýnýflaraq iliþkin catch bloklarý beraber bulundurulabilir. Ancak bu durumda taban sýnýfa
+	iliþkin catch bloðunun türemiþ sýnýfa iliþkin catch bloðunun aþaðýsýnda bulundurulmasý gerekir. Çünkü
+	catch bloklarýna yukarýdan aþaðýya doðru bakýlmaktadýr. 
+---------------------------------------------------------------------------------------------------------*/
+
+int main()
+{	
+	cout << "main begins..." << endl;
+	try {
+		foo(-10);
+	}
+	catch (const invalid_argument &e) {
+		cout << e.what() << endl;
+	}
+	catch (const exception &e) {
+		cout << e.what() << endl;
+	}
+
+	cout << "main ends..." << endl;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Akýþ try bloðuna girdikten sonra eðer exception oluþursa henüz akýþ bir catch devredilmeden 
+	daha önce yaratýlmýþ olan yerel sýnýf nesneleri için ters sýrada tek tek destructor çaðrýlmaktadýr.
+	Bu iþleme "stack unwinding" denilmektedir.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample(int a)
+	{
+		cout << "constructor: " << a << endl;
+		m_a = a;
+	}
+	~Sample()
+	{
+		cout << "destructor: " << m_a << endl;
+	}
+private:
+	int m_a;
+};
+
+void foo(int a);
+void bar(int a);
+void tar(int a);
+
+int main()
+{	
+	try {
+		Sample x(10);
+
+		foo(-10);
+	}
+	catch (const invalid_argument &e) {
+		cout << e.what() << endl;
+	}
+
+	return 0;
+}
+
+void foo(int a)
+{
+	Sample y(20);
+
+	bar(a);
+}
+
+void bar(int a)
+{
+	Sample z(30);
+
+	tar(a);
+}
+
+void tar(int a)
+{
+	Sample k(40);
+
+	if (a < 0)
+		throw invalid_argument("value must not be negative!");
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Stack unwinding iþlemi dinamik nesneler için yapýlmamaktadýr. 
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample(int a)
+	{
+		cout << "constructor: " << a << endl;
+		m_a = a;
+	}
+	~Sample()
+	{
+		cout << "destructor: " << m_a << endl;
+	}
+private:
+	int m_a;
+};
+
+void foo(int a);
+void bar(int a);
+void tar(int a);
+
+int main()
+{	
+	try {
+		Sample *x = new Sample(10);
+
+		foo(-10);
+	}
+	catch (const invalid_argument &e) {
+		cout << e.what() << endl;
+	}
+
+	return 0;
+}
+
+void foo(int a)
+{
+	Sample *y = new Sample(20);
+
+	bar(a);
+}
+
+void bar(int a)
+{
+	Sample *z = new Sample(30);
+
+	tar(a);
+}
+
+void tar(int a)
+{
+	Sample *k = new Sample(40);
+
+	if (a < 0)
+		throw invalid_argument("value must not be negative!");
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Eðer programcý try bloðundan sonra 
+	dinamik bir nesne yaratmýþsa bunun boþaltýmýný kendisi ayarlamalýdýr. Ya da bunun için unique_ptr, weak_ptr
+	shared_ptr gibi sýnýflarý kullanmalýdýr. Çünkü bu sýnýflar adresleri bir sýnýf nesnesinin içeriisnde tutar. 
+	Stack unwinding iþlemi sýrasýnda sýnýfýn bitiþ fonksiyonu (destructor) çaðrýlacaðýndan bu sýnýflarýn
+	bitiþ fonksiyonlarý da boþaltýmý yapmaktadýr.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+class Sample {
+public:
+	Sample(int a)
+	{
+		cout << "constructor: " << a << endl;
+		m_a = a;
+	}
+	~Sample()
+	{
+		cout << "destructor: " << m_a << endl;
+	}
+private:
+	int m_a;
+};
+
+void foo(int a);
+void bar(int a);
+void tar(int a);
+
+int main()
+{	
+	try {
+		unique_ptr<Sample> x(new Sample(10));
+
+		foo(-10);
+	}
+	catch (const invalid_argument &e) {
+		cout << e.what() << endl;
+	}
+
+	return 0;
+}
+
+void foo(int a)
+{
+	unique_ptr<Sample> y(new Sample(20));
+
+	bar(a);
+}
+
+void bar(int a)
+{
+	unique_ptr<Sample> z(new Sample(30));
+
+	tar(a);
+}
+
+void tar(int a)
+{
+	unique_ptr<Sample> k(new Sample(40));
+
+	if (a < 0)
+		throw invalid_argument("value must not be negative!");
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	C++'ta bir fonksiyonun hangi exception'larla throw edebildiði belirtilebilmektedir. Buna exception
+	specification denilmektedir. Ancak exception specification içeren fonksiyonlar çaðrýlýrken bunlarýn
+	try ile catch ile handle edilme zorunluluðu yoktur. (Halbuki Java'da böyle bir zorunluluk vardýr.)
+	Maalesef Microsoft C++ derleyicileri exception specification özelliðini tam olarak desteklememektedir. 
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+void foo(int a) throw(int);
+
+int main()
+{	
+	try {
+
+		foo(-10);
+	}
+	catch (int a) {
+		cout << "exception(int) caught" << endl;
+	}
+
+	return 0;
+}
+
+void foo(int a) throw(invalid_argument)
+{
+	if (a < 0)
+		throw invalid_argument("value must not be negative!.");
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Çoklu türetme
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	void foo();
+};
+
+void A::foo()
+{
+	cout << "A::foo" << endl;
+}
+
+class B {
+public:
+	void bar();
+};
+
+void B::bar()
+{
+	cout << "B::bar" << endl;
+}
+
+class C : public A, public B {
+public:
+	void tar();
+};
+
+void C::tar()
+{
+	cout << "C::tar" << endl;
+}
+
+int main()
+{	
+	C c;
+
+	c.foo();
+	c.bar();
+	c.tar();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Çoklu türetmede tüm taban sýnýf kollarýndaki fonksiyonlar ilk bulunduklarý sýnýftan alýnarak birlikte
+	"overload resolution" iþlemine sokulmaktadýr. Yani farklý kollarda ayný parametrik yapýya sahip 
+	fonksiyonlar varsa bunlarýn çaðrýlmasý sýrasýnda sorun oluþabilir.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	void foo();
+};
+
+void A::foo()
+{
+	cout << "A::foo" << endl;
+}
+
+class B {
+public:
+	void foo();
+};
+
+void B::foo()
+{
+	cout << "B::bar" << endl;
+}
+
+class C : public A, public B {
+public:
+	void tar();
+};
+
+void C::tar()
+{
+	cout << "C::tar" << endl;
+}
+
+int main()
+{	
+	C c;
+
+	c.foo();		// ambiguity error!
+	c.tar();
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Çoklu türetmede sýnýflarýn baþlanýç fonksiyonlarý her zaman bildirimdeki sýraya baðlý olarak çalýþtýrýlýr.
+	Yine hangi taban sýnýfýn hangi baþlangýç metodunun çaðrýlacaðý ctor (mil) sentaksýyla belirtilmektedir. 
+	MIL sentaksýndaki sýranýn hiçbir önemi yoktur. Çaðrým her zaman bildirimdeki sýraya göre yapýlmaktadýr.
+	Eðer MIL sentaksýnda taban sýnýf ismi belirtilmezse taban sýnýfýn default baþlangýç fonksiyonu çaðrýlýr.
+	Sýnýfýn bitiþ fonksiyonlarý her zaman yine ters sýrada çaðrýlmaktadýr.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	A()
+	{
+		cout << "A constructor" << endl;
+	}
+	~A()
+	{
+		cout << "A destructor" << endl;
+	}
+
+};
+
+class B {
+public:
+	B()
+	{
+		cout << "B constructor" << endl;
+	}
+	~B()
+	{
+		cout << "B destructor" << endl;
+	}
+};
+
+class C : public A, public B {
+public:
+	C();
+	~C()
+	{
+		cout << "C destructor" << endl;
+	}
+};
+
+C::C() : B(), A()
+{
+	cout << "C constructor" << endl;
+}
+
+int main()
+{	
+	C c;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Çoklu türetmeden taban sýnýflar da doðrudan ya da dolaylý biçimde baþka bir sýnýftan türetilmiþlerse
+	(elmas þekli türetme) bu durumda bu taban sýnýflardan nesne içerisinde birden fazla kez bulunur. Bu da 
+	pek çok sorun doðurma potansiytelindedir. 
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	A()
+	{
+		cout << "A constructor" << endl;
+	}
+	~A()
+	{
+		cout << "A destructor" << endl;
+	}
+
+};
+
+class B {
+public:
+	B()
+	{
+		cout << "B constructor" << endl;
+	}
+	~B()
+	{
+		cout << "B destructor" << endl;
+	}
+};
+
+class C : public A, public B {
+public:
+	C();
+	~C()
+	{
+		cout << "C destructor" << endl;
+	}
+};
+
+C::C() : B(), A()
+{
+	cout << "C constructor" << endl;
+}
+
+int main()
+{	
+	C c;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Yukarýdaki sorundan kurtulmak için C++'ta sanal taban sýnýf (virtual base class) kavramý geliþtirilmiþtir.
+	Eðer taba listede taban sýnýfýn önüne virtual anahtar anaktar sözcüðü getirilirse bu taban sýnýflar
+	çoýk türetmede birden fazla kez bulunsa bile yalnýzca tek kopyasý nesne içerisine yerleþtirilir
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class X {
+public:
+	X()
+	{
+		cout << "X constructor" << endl;
+	}
+	~X()
+	{
+		cout << "X destructor" << endl;
+	}
+};
+
+class A : virtual public X {
+public:
+	A()
+	{
+		cout << "A constructor" << endl;
+	}
+	~A()
+	{
+		cout << "A destructor" << endl;
+	}
+
+};
+
+class B : virtual public X {
+public:
+	B()
+	{
+		cout << "B constructor" << endl;
+	}
+	~B()
+	{
+		cout << "B destructor" << endl;
+	}
+};
+
+class C : public A, public B {
+public:
+	C();
+	~C()
+	{
+		cout << "C destructor" << endl;
+	}
+};
+
+C::C() : B(), A()
+{
+	cout << "C constructor" << endl;
+}
+
+int main()
+{	
+	C c;
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------
+	Çoklu türetmeden çoklu türetilmiþ sýnýf nesnesinin adresi herhangi bir taban sýnýfa dönüþtürülebilir. 
+	Taban sýnýflardakiþ sanal fonksiyonlar çoklu türetilmiþ sýnýfta ayrý ayrý override edilebilirler. 
+	Java ve C# gibi dillerde çoklu türetme yoktur. Ancak bu biçimdeki bir çokbiçimli davranýþtan faydalanabilmek için
+	bu dillere "interface" kavramý sokulmuþtur. Aþaðýdaki örnek Java ve C#'taki interfaze kavramýný karþýlamaktadýr.
+---------------------------------------------------------------------------------------------------------*/
+
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+	virtual void foo() = 0;
+};
+
+class B {
+public:
+	virtual void bar() = 0;
+};
+
+class C : public A, public B {
+public:
+	void foo() override
+	{
+		cout << "C::foo" << endl;
+	}
+
+	void bar() override
+	{
+		cout << "C::bar" << endl;
+	}
+};
+
+
+int main()
+{	
+	A *pA;
+	B *pB;
+	C c;
+
+	pA = &c;
+	pB = &c;
+
+	pA->foo();
+	pB->bar();
+
+	return 0;
+}
+
